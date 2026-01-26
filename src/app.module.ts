@@ -3,9 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ClientesModule } from './clientes/clientes.module';
-import { VehiculosModule } from './vehiculos/vehiculos.module';
-import { OrdenesModule } from './ordenes/ordenes.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 
@@ -27,12 +24,6 @@ import { AuthModule } from './auth/auth.module';
       autoLoadEntities: true, // Carga automáticamente las @Entity de cada módulo
       synchronize: true, // ⚠️ Solo en desarrollo - crea tablas automáticamente
     }),
-
-    ClientesModule,
-
-    VehiculosModule,
-
-    OrdenesModule,
 
     UsersModule,
 
