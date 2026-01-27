@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { TerminalModule } from './terminal/terminal.module';
 import { ModelosModule } from './modelos/modelos.module';
 import { BusesModule } from './buses/buses.module';
+import { EmpleadosModule } from './empleados/empleados.module';
 
 @Module({
   imports: [
@@ -37,6 +38,8 @@ import { BusesModule } from './buses/buses.module';
     ModelosModule,
 
     BusesModule,
+
+    EmpleadosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
