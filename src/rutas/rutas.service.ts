@@ -43,12 +43,23 @@ export class RutasService {
     return await this.rutaRepository.find()
   }
 
-  update(id: number, updateRutaDto: UpdateRutaDto) {
-    return `This action updates a #${id} ruta`;
+  async update(id: number, updateRutaDto: UpdateRutaDto) {
+    const rutaActual = await this.findOne(id)
+    if (updateRutaDto.ruta) {
+      const nuevaRutaNormalizada = normalizeText(updateRutaDto.ruta)
+      const nombreActualNormalizada = normalizeText(rutaActual.ruta)
+      if (nuevaRutaNormalizada !== nombreActualNormalizada) {
+        await this.validarRutaUnica(updateRutaDto.ruta)
+      }
+      updateRutaDto.ruta = nuevaRutaNormalizada
+    }
+    await this.rutaRepository.update(id, updateRutaDto)
+    return this.findOne(id)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ruta`;
+  async emove(id: number) {
+    const rutaAEliminar = await this.findOne(id)
+    await this.rutaRepository.remove(rutaAEliminar)
   }
 
 
