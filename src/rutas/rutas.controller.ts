@@ -1,13 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, ParseIntPipe } from '@nestjs/common';
 import { RutasService } from './rutas.service';
 import { CreateRutaDto } from './dto/create-ruta.dto';
 import { UpdateRutaDto } from './dto/update-ruta.dto';
 
 @Controller('rutas')
 export class RutasController {
-  constructor(private readonly rutasService: RutasService) {}
+  constructor(private readonly rutasService: RutasService) { }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() createRutaDto: CreateRutaDto) {
     return this.rutasService.create(createRutaDto);
   }
@@ -18,17 +19,21 @@ export class RutasController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.rutasService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.rutasService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRutaDto: UpdateRutaDto) {
-    return this.rutasService.update(+id, updateRutaDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateRutaDto: UpdateRutaDto) {
+    return this.rutasService.update(id, updateRutaDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.rutasService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const rutaEliminada = this.rutasService.remove(id);
+    return {
+      message: `Ruta ${(await rutaEliminada).ruta} eliminada correctamente`,
+      id: (await rutaEliminada).idRuta
+    }
   }
 }

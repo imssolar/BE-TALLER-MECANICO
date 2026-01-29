@@ -4,6 +4,7 @@ import { UpdateRutaDto } from './dto/update-ruta.dto';
 import { ILike, Like, Repository } from 'typeorm';
 import { Ruta } from './entities/ruta.entity';
 import { normalizeText } from '@/common/helpers/text.helper';
+import { DeleteResponseDto } from './dto/delete-response.dto';
 
 @Injectable()
 export class RutasService {
@@ -58,8 +59,19 @@ export class RutasService {
   }
 
   async remove(id: number) {
-    const rutaAEliminar = await this.findOne(id)
-    await this.rutaRepository.remove(rutaAEliminar)
+    const ruta = await this.rutaRepository.findOneBy({ idRuta: id });
+
+    if (!ruta) {
+      throw new NotFoundException(`Ruta con ID ${id} no encontrada`);
+    }
+
+    const datosParaResponse = {
+      id: ruta.idRuta,
+      nombre: ruta.ruta
+    };
+
+    await this.rutaRepository.delete(id);
+    return new DeleteResponseDto(datosParaResponse.id, datosParaResponse.nombre);
   }
 
 
