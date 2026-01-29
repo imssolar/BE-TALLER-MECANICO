@@ -30,10 +30,6 @@ export class RutasController {
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const rutaEliminada = this.rutasService.remove(id);
-    return {
-      message: `Ruta ${(await rutaEliminada).ruta} eliminada correctamente`,
-      id: (await rutaEliminada).idRuta
-    }
+    return this.rutasService.remove(id);
   }
 }
