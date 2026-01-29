@@ -5,6 +5,6 @@ export class Ruta {
     @PrimaryGeneratedColumn({ name: 'id_ruta' })
     idRuta: number;
 
-    @Column({ name: 'ruta', type: 'varchar', nullable: true, length: 50 })
+    @Column({ name: 'ruta', type: 'varchar', nullable: false, length: 50 })
     ruta: string;
 }
