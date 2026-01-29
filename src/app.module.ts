@@ -9,6 +9,7 @@ import { TerminalModule } from './terminal/terminal.module';
 import { ModelosModule } from './modelos/modelos.module';
 import { BusesModule } from './buses/buses.module';
 import { EmpleadosModule } from './empleados/empleados.module';
+import { RutasModule } from './rutas/rutas.module';
 
 @Module({
   imports: [
@@ -40,6 +41,8 @@ import { EmpleadosModule } from './empleados/empleados.module';
     BusesModule,
 
     EmpleadosModule,
+
+    RutasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
