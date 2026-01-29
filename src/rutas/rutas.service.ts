@@ -57,7 +57,7 @@ export class RutasService {
     return this.findOne(id)
   }
 
-  async emove(id: number) {
+  async remove(id: number) {
     const rutaAEliminar = await this.findOne(id)
     await this.rutaRepository.remove(rutaAEliminar)
   }
