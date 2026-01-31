@@ -1,18 +1,21 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Body, 
+  Patch, 
+  Param, 
   Delete,
-  ParseIntPipe,
   HttpCode,
   HttpStatus,
+  ParseIntPipe
 } from '@nestjs/common';
 import { EmpleadosService } from './empleados.service';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
+import { EmpleadoResponseDto } from './dto/empleado-response.dto';
+import { DeleteEmpleadoResponseDto } from './dto/delete-empleado-response.dto';
+
 
 @Controller('empleados')
 export class EmpleadosController {
@@ -20,72 +23,65 @@ export class EmpleadosController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createEmpleadoDto: CreateEmpleadoDto) {
+  create(@Body() createEmpleadoDto: CreateEmpleadoDto): Promise<EmpleadoResponseDto> {
     return this.empleadosService.create(createEmpleadoDto);
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<EmpleadoResponseDto[]> {
     return this.empleadosService.findAll();
   }
 
-  // ========== RUTAS ESPECÍFICAS (ANTES DE :id) ==========
-  
   @Get('activos')
-  findActivos() {
+  findActivos(): Promise<EmpleadoResponseDto[]> {
     return this.empleadosService.findActivos();
   }
 
   @Get('inactivos')
-  findInactivos() {
+  findInactivos(): Promise<EmpleadoResponseDto[]> {
     return this.empleadosService.findInactivos();
   }
 
   @Get('conductores')
-  findConductores() {
+  findConductores(): Promise<EmpleadoResponseDto[]> {
     return this.empleadosService.findConductores();
   }
 
   @Get('mecanicos')
-  findMecanicos() {
+  findMecanicos(): Promise<EmpleadoResponseDto[]> {
     return this.empleadosService.findMecanicos();
   }
 
   @Get('rut/:rut')
-  findByRut(@Param('rut') rut: string) {
+  findByRut(@Param('rut') rut: string): Promise<EmpleadoResponseDto> {
     return this.empleadosService.findByRut(rut);
   }
 
-  // ========== RUTAS CON :id (AL FINAL) ==========
-
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<EmpleadoResponseDto> {
     return this.empleadosService.findOne(id);
   }
 
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateEmpleadoDto: UpdateEmpleadoDto,
-  ) {
+    @Body() updateEmpleadoDto: UpdateEmpleadoDto
+  ): Promise<EmpleadoResponseDto> {
     return this.empleadosService.update(id, updateEmpleadoDto);
   }
 
-  @Patch(':id/activar')
-  @HttpCode(HttpStatus.OK)
-  activar(@Param('id', ParseIntPipe) id: number) {
-    return this.empleadosService.activar(id);
-  }
-
   @Patch(':id/desactivar')
-  @HttpCode(HttpStatus.OK)
-  desactivar(@Param('id', ParseIntPipe) id: number) {
+  desactivar(@Param('id', ParseIntPipe) id: number): Promise<EmpleadoResponseDto> {
     return this.empleadosService.desactivar(id);
   }
 
+  @Patch(':id/activar')
+  activar(@Param('id', ParseIntPipe) id: number): Promise<EmpleadoResponseDto> {
+    return this.empleadosService.activar(id);
+  }
+
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteEmpleadoResponseDto> {
     return this.empleadosService.remove(id);
   }
 }

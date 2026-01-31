@@ -1,0 +1,35 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, ParseIntPipe } from '@nestjs/common';
+import { RutasService } from './rutas.service';
+import { CreateRutaDto } from './dto/create-ruta.dto';
+import { UpdateRutaDto } from './dto/update-ruta.dto';
+
+@Controller('rutas')
+export class RutasController {
+  constructor(private readonly rutasService: RutasService) { }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() createRutaDto: CreateRutaDto) {
+    return this.rutasService.create(createRutaDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.rutasService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.rutasService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateRutaDto: UpdateRutaDto) {
+    return this.rutasService.update(id, updateRutaDto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return this.rutasService.remove(id);
+  }
+}
