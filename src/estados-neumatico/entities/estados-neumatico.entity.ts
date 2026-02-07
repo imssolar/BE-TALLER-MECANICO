@@ -5,6 +5,6 @@ export class EstadosNeumatico {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ name: 'estado', type: 'varchar', length: 15, nullable: true })
-    estado: string | null;
+    @Column({ name: 'estado', type: 'varchar', length: 15, nullable: false })
+    estado: string;
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, HttpCode, HttpStatus } from '@nestjs/common';
 import { MarcasNeumaticosService } from './marcas-neumaticos.service';
 import { CreateMarcasNeumaticoDto } from './dto/create-marcas-neumatico.dto';
 import { UpdateMarcasNeumaticoDto } from './dto/update-marcas-neumatico.dto';
@@ -8,6 +8,7 @@ export class MarcasNeumaticosController {
   constructor(private readonly marcasNeumaticosService: MarcasNeumaticosService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() createMarcasNeumaticoDto: CreateMarcasNeumaticoDto) {
     return this.marcasNeumaticosService.create(createMarcasNeumaticoDto);
   }
@@ -18,17 +19,20 @@ export class MarcasNeumaticosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.marcasNeumaticosService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.marcasNeumaticosService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMarcasNeumaticoDto: UpdateMarcasNeumaticoDto) {
-    return this.marcasNeumaticosService.update(+id, updateMarcasNeumaticoDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateMarcasNeumaticoDto: UpdateMarcasNeumaticoDto
+  ) {
+    return this.marcasNeumaticosService.update(id, updateMarcasNeumaticoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.marcasNeumaticosService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.marcasNeumaticosService.remove(id);
   }
 }

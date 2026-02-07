@@ -6,6 +6,6 @@ export class MarcasNeumatico {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ name: 'marca', type: 'varchar', length: 15, nullable: true })
+    @Column({ name: 'marca', type: 'varchar', length: 15, nullable: false })
     marca: string;
 }
