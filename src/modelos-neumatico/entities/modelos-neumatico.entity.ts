@@ -5,6 +5,6 @@ export class ModelosNeumatico {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ name: 'modelo', type: 'varchar', length: 15, nullable: true })
-    modelo: string | null;
+    @Column({ name: 'modelo', type: 'varchar', length: 15, nullable: false })
+    modelo: string;
 }
