@@ -7,5 +7,5 @@ export class MarcasNeumatico {
     id: number;
 
     @Column({ name: 'marca', type: 'varchar', length: 15, nullable: true })
-    marca: string | null;
+    marca: string;
 }
