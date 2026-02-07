@@ -47,6 +47,14 @@ import { ModelosNeumaticoModule } from './modelos-neumatico/modelos-neumatico.mo
     EmpleadosModule,
 
     RutasModule,
+
+    NeumaticosModule,
+
+    EstadosNeumaticoModule,
+
+    MarcasNeumaticosModule,
+
+    ModelosNeumaticoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
