@@ -10,6 +10,10 @@ import { ModelosModule } from './modelos/modelos.module';
 import { BusesModule } from './buses/buses.module';
 import { EmpleadosModule } from './empleados/empleados.module';
 import { RutasModule } from './rutas/rutas.module';
+import { NeumaticosModule } from './neumaticos/neumaticos.module';
+import { EstadosNeumaticoModule } from './estados-neumatico/estados-neumatico.module';
+import { MarcasNeumaticosModule } from './marcas-neumaticos/marcas-neumaticos.module';
+import { ModelosNeumaticoModule } from './modelos-neumatico/modelos-neumatico.module';
 
 @Module({
   imports: [
