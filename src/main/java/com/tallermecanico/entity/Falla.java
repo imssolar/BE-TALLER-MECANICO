@@ -4,12 +4,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "Fallas")
 public class Falla {
 
     @Id
+    @Size(min = 3, max = 3)
     @Column(name = "id_falla")
     private String idFalla;
 
