@@ -20,7 +20,7 @@ public class FallaService {
     }
 
     @Transactional
-    public Falla createFalla(CreateFallaDto createFallaDto){
+    public Falla create(CreateFallaDto createFallaDto){
         if(fallaRepository.existsById(createFallaDto.getIdFalla())){
             throw new DuplicateResourceException("Falla", "idFalla", createFallaDto.getIdFalla());
         }
@@ -47,10 +47,12 @@ public class FallaService {
     @Transactional
     public Falla update(String id, UpdateFallaDto updateFallaDto){
         Falla existeFalla = this.findById(id);
-        if(updateFallaDto.getFalla() != null && fallaRepository.existsByFallaAndIdFallaNot(updateFallaDto.getFalla(), id)){
-            throw new DuplicateResourceException("Falla", "falla", updateFallaDto.getFalla());
+        if(updateFallaDto.getFalla() != null){
+            if(fallaRepository.existsByFallaAndIdFallaNot(updateFallaDto.getFalla(), id)){
+                throw new DuplicateResourceException("Falla", "falla", updateFallaDto.getFalla());
+            }
+            existeFalla.setFalla(updateFallaDto.getFalla());
         }
-        existeFalla.setFalla(updateFallaDto.getFalla());
         return fallaRepository.save(existeFalla);
     }
 
