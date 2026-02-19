@@ -1,10 +1,12 @@
 package com.tallermecanico.dto.request;
 
 import com.tallermecanico.enums.CargoEmpleado;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import com.tallermecanico.enums.Escolaridad;
+import com.tallermecanico.enums.EstadoCivil;
+import com.tallermecanico.enums.Parentesco;
+import com.tallermecanico.enums.Talla;
+import jakarta.validation.constraints.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class CreateEmpleadoDto {
@@ -43,6 +45,54 @@ public class CreateEmpleadoDto {
     private String licenciaConducir;
 
     private LocalDate fechaVencimientoLicencia;
+
+    // --- Nuevos campos ---
+
+    private Talla talla;
+
+    @Min(value = 0, message = "El calzado debe ser mayor o igual a 0")
+    private Short calzado;
+
+    private LocalDate fechaNacimiento;
+
+    private EstadoCivil estadoCivil;
+
+    @Min(value = 0, message = "El número de hijos debe ser mayor o igual a 0")
+    private Short hijos;
+
+    @Size(max = 50, message = "La dirección no puede exceder 50 caracteres")
+    private String direccion;
+
+    private Integer idComuna;
+
+    private Integer idCiudad;
+
+    @Size(max = 15, message = "El teléfono 2 no puede exceder 15 caracteres")
+    private String telefono2;
+
+    private Escolaridad escolaridad;
+
+    private Integer idNacionalidad;
+
+    private Integer idTipoVisa;
+
+    @Size(max = 30, message = "El contacto de emergencia no puede exceder 30 caracteres")
+    private String contactoEmergencia;
+
+    @Size(max = 15, message = "El teléfono de contacto de emergencia no puede exceder 15 caracteres")
+    private String fonoContactoEmergencia;
+
+    private Parentesco parentesco;
+
+    private Boolean exTrabajador = false;
+
+    @Size(max = 500, message = "Las observaciones no pueden exceder 500 caracteres")
+    private String observaciones;
+
+    @DecimalMin(value = "0", message = "El costo debe ser mayor o igual a 0")
+    private BigDecimal costo;
+
+    private Integer idTaller;
 
     // Constructors
     public CreateEmpleadoDto() {
@@ -127,5 +177,157 @@ public class CreateEmpleadoDto {
 
     public void setFechaVencimientoLicencia(LocalDate fechaVencimientoLicencia) {
         this.fechaVencimientoLicencia = fechaVencimientoLicencia;
+    }
+
+    public Talla getTalla() {
+        return talla;
+    }
+
+    public void setTalla(Talla talla) {
+        this.talla = talla;
+    }
+
+    public Short getCalzado() {
+        return calzado;
+    }
+
+    public void setCalzado(Short calzado) {
+        this.calzado = calzado;
+    }
+
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public EstadoCivil getEstadoCivil() {
+        return estadoCivil;
+    }
+
+    public void setEstadoCivil(EstadoCivil estadoCivil) {
+        this.estadoCivil = estadoCivil;
+    }
+
+    public Short getHijos() {
+        return hijos;
+    }
+
+    public void setHijos(Short hijos) {
+        this.hijos = hijos;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public Integer getIdComuna() {
+        return idComuna;
+    }
+
+    public void setIdComuna(Integer idComuna) {
+        this.idComuna = idComuna;
+    }
+
+    public Integer getIdCiudad() {
+        return idCiudad;
+    }
+
+    public void setIdCiudad(Integer idCiudad) {
+        this.idCiudad = idCiudad;
+    }
+
+    public String getTelefono2() {
+        return telefono2;
+    }
+
+    public void setTelefono2(String telefono2) {
+        this.telefono2 = telefono2;
+    }
+
+    public Escolaridad getEscolaridad() {
+        return escolaridad;
+    }
+
+    public void setEscolaridad(Escolaridad escolaridad) {
+        this.escolaridad = escolaridad;
+    }
+
+    public Integer getIdNacionalidad() {
+        return idNacionalidad;
+    }
+
+    public void setIdNacionalidad(Integer idNacionalidad) {
+        this.idNacionalidad = idNacionalidad;
+    }
+
+    public Integer getIdTipoVisa() {
+        return idTipoVisa;
+    }
+
+    public void setIdTipoVisa(Integer idTipoVisa) {
+        this.idTipoVisa = idTipoVisa;
+    }
+
+    public String getContactoEmergencia() {
+        return contactoEmergencia;
+    }
+
+    public void setContactoEmergencia(String contactoEmergencia) {
+        this.contactoEmergencia = contactoEmergencia;
+    }
+
+    public String getFonoContactoEmergencia() {
+        return fonoContactoEmergencia;
+    }
+
+    public void setFonoContactoEmergencia(String fonoContactoEmergencia) {
+        this.fonoContactoEmergencia = fonoContactoEmergencia;
+    }
+
+    public Parentesco getParentesco() {
+        return parentesco;
+    }
+
+    public void setParentesco(Parentesco parentesco) {
+        this.parentesco = parentesco;
+    }
+
+    public Boolean getExTrabajador() {
+        return exTrabajador;
+    }
+
+    public void setExTrabajador(Boolean exTrabajador) {
+        this.exTrabajador = exTrabajador;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public BigDecimal getCosto() {
+        return costo;
+    }
+
+    public void setCosto(BigDecimal costo) {
+        this.costo = costo;
+    }
+
+    public Integer getIdTaller() {
+        return idTaller;
+    }
+
+    public void setIdTaller(Integer idTaller) {
+        this.idTaller = idTaller;
     }
 }
