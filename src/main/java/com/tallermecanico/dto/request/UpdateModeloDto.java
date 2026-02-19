@@ -1,28 +1,28 @@
 package com.tallermecanico.dto.request;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 public class UpdateModeloDto {
 
-    @Size(max = 15, message = "El nombre del modelo no puede exceder 15 caracteres")
+    @Size(max = 100, message = "El nombre del modelo no debe exceder los 100 caracteres")
     private String modelo;
 
-    @Min(value = 0, message = "El kilometraje diario no puede ser negativo")
+    @DecimalMin(value = "0", message = "El kilometraje diario debe ser mayor o igual a 0")
     private BigDecimal kmDiario;
 
-    @Size(max = 35, message = "Las observaciones no pueden exceder 35 caracteres")
-    private String obs;
+    @Size(max = 255, message = "Las observaciones no deben exceder los 255 caracteres")
+    private String observaciones;
 
     // Constructors
     public UpdateModeloDto() {
     }
 
-    public UpdateModeloDto(String modelo, BigDecimal kmDiario, String obs) {
+    public UpdateModeloDto(String modelo, BigDecimal kmDiario, String observaciones) {
         this.modelo = modelo;
         this.kmDiario = kmDiario;
-        this.obs = obs;
+        this.observaciones = observaciones;
     }
 
     // Getters and Setters
@@ -31,7 +31,7 @@ public class UpdateModeloDto {
     }
 
     public void setModelo(String modelo) {
-        this.modelo = modelo != null ? modelo.trim().toUpperCase() : null;
+        this.modelo = modelo;
     }
 
     public BigDecimal getKmDiario() {
@@ -42,11 +42,11 @@ public class UpdateModeloDto {
         this.kmDiario = kmDiario;
     }
 
-    public String getObs() {
-        return obs;
+    public String getObservaciones() {
+        return observaciones;
     }
 
-    public void setObs(String obs) {
-        this.obs = obs;
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 }

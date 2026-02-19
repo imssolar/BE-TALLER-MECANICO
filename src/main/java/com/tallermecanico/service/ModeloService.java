@@ -2,10 +2,12 @@ package com.tallermecanico.service;
 
 import com.tallermecanico.dto.request.CreateModeloDto;
 import com.tallermecanico.dto.request.UpdateModeloDto;
+import com.tallermecanico.dto.response.DeleteModeloResponseDto;
 import com.tallermecanico.entity.Modelo;
 import com.tallermecanico.exception.DuplicateResourceException;
 import com.tallermecanico.exception.ResourceNotFoundException;
 import com.tallermecanico.repository.ModeloRepository;
+import com.tallermecanico.util.TextUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,16 +24,16 @@ public class ModeloService {
 
     @Transactional
     public Modelo create(CreateModeloDto dto) {
-        // Validar modelo único
-        if (dto.getModelo() != null && modeloRepository.existsByModelo(dto.getModelo())) {
+        String nombreNormalizado = TextUtils.normalizeText(dto.getModelo());
+
+        if (modeloRepository.existsByModeloIgnoreCase(nombreNormalizado)) {
             throw new DuplicateResourceException("Modelo", "modelo", dto.getModelo());
         }
 
         Modelo modelo = new Modelo();
-        modelo.setIdModelo(dto.getIdModelo());
-        modelo.setModelo(dto.getModelo());
+        modelo.setModelo(nombreNormalizado);
         modelo.setKmDiario(dto.getKmDiario());
-        modelo.setObs(dto.getObs());
+        modelo.setObservaciones(dto.getObservaciones());
 
         return modeloRepository.save(modelo);
     }
@@ -49,30 +51,40 @@ public class ModeloService {
 
     @Transactional
     public Modelo update(Integer id, UpdateModeloDto dto) {
-        Modelo modelo = findById(id);
-
-        // Validar modelo único (excluyendo el actual)
-        if (dto.getModelo() != null &&
-            modeloRepository.existsByModeloAndIdModeloNot(dto.getModelo(), id)) {
-            throw new DuplicateResourceException("Modelo", "modelo", dto.getModelo());
-        }
+        Modelo modelo = modeloRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Modelo", "id", id));
 
         if (dto.getModelo() != null) {
-            modelo.setModelo(dto.getModelo());
+            String nombreNormalizado = TextUtils.normalizeText(dto.getModelo());
+
+            if (modeloRepository.existsByModeloIgnoreCaseAndIdNot(nombreNormalizado, id)) {
+                throw new DuplicateResourceException("Modelo", "modelo", dto.getModelo());
+            }
+
+            modelo.setModelo(nombreNormalizado);
         }
+
         if (dto.getKmDiario() != null) {
             modelo.setKmDiario(dto.getKmDiario());
         }
-        if (dto.getObs() != null) {
-            modelo.setObs(dto.getObs());
+
+        if (dto.getObservaciones() != null) {
+            modelo.setObservaciones(dto.getObservaciones());
         }
 
         return modeloRepository.save(modelo);
     }
 
     @Transactional
-    public void delete(Integer id) {
-        Modelo modelo = findById(id);
+    public DeleteModeloResponseDto delete(Integer id) {
+        Modelo modelo = modeloRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Modelo", "id", id));
+
         modeloRepository.delete(modelo);
+        return new DeleteModeloResponseDto(
+                modelo.getId(),
+                modelo.getModelo(),
+                "Modelo eliminado exitosamente"
+        );
     }
 }
