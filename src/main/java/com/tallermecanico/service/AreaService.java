@@ -32,6 +32,7 @@ public class AreaService {
 
         Area area = new Area();
         area.setArea(nombreNormalizado);
+        area.setPonderacion(dto.getPonderacion());
 
         return areaRepository.save(area);
     }
@@ -60,6 +61,10 @@ public class AreaService {
             }
 
             area.setArea(nombreNormalizado);
+        }
+
+        if (dto.getPonderacion() != null) {
+            area.setPonderacion(dto.getPonderacion());
         }
 
         return areaRepository.save(area);
