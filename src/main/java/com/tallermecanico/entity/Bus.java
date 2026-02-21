@@ -1,6 +1,7 @@
 package com.tallermecanico.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -68,6 +69,12 @@ public class Bus {
 
     @Column(name = "proy_rep", length = 10)
     private String proyRep;
+
+    @Column(name = "fecha_revision_tecnica")
+    private LocalDate fechaRevisionTecnica;
+
+    @Column(name = "fecha_revision_gases")
+    private LocalDate fechaRevisionGases;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_terminal")
@@ -247,6 +254,22 @@ public class Bus {
 
     public void setProyRep(String proyRep) {
         this.proyRep = proyRep;
+    }
+
+    public LocalDate getFechaRevisionTecnica() {
+        return fechaRevisionTecnica;
+    }
+
+    public void setFechaRevisionTecnica(LocalDate fechaRevisionTecnica) {
+        this.fechaRevisionTecnica = fechaRevisionTecnica;
+    }
+
+    public LocalDate getFechaRevisionGases() {
+        return fechaRevisionGases;
+    }
+
+    public void setFechaRevisionGases(LocalDate fechaRevisionGases) {
+        this.fechaRevisionGases = fechaRevisionGases;
     }
 
     public Terminal getTerminal() {

@@ -3,6 +3,7 @@ package com.tallermecanico.dto.request;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class CreateBusDto {
@@ -54,6 +55,9 @@ public class CreateBusDto {
 
     @Size(max = 10, message = "El proyecto de reparación no puede exceder 10 caracteres")
     private String proyRep;
+
+    private LocalDate fechaRevisionTecnica;
+    private LocalDate fechaRevisionGases;
 
     @NotNull(message = "El ID del terminal es requerido")
     private Integer idTerminal;
@@ -224,6 +228,22 @@ public class CreateBusDto {
 
     public void setProyRep(String proyRep) {
         this.proyRep = proyRep;
+    }
+
+    public LocalDate getFechaRevisionTecnica() {
+        return fechaRevisionTecnica;
+    }
+
+    public void setFechaRevisionTecnica(LocalDate fechaRevisionTecnica) {
+        this.fechaRevisionTecnica = fechaRevisionTecnica;
+    }
+
+    public LocalDate getFechaRevisionGases() {
+        return fechaRevisionGases;
+    }
+
+    public void setFechaRevisionGases(LocalDate fechaRevisionGases) {
+        this.fechaRevisionGases = fechaRevisionGases;
     }
 
     public Integer getIdTerminal() {
