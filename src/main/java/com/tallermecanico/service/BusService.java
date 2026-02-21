@@ -65,6 +65,8 @@ public class BusService {
         bus.setNoControladaB(dto.getNoControladaB() != null ? dto.getNoControladaB() : false);
         bus.setOperativaPatio(dto.getOperativaPatio() != null ? dto.getOperativaPatio() : false);
         bus.setProyRep(dto.getProyRep());
+        bus.setFechaRevisionTecnica(dto.getFechaRevisionTecnica());
+        bus.setFechaRevisionGases(dto.getFechaRevisionGases());
         bus.setTerminal(terminal);
         bus.setModelo(modelo);
 
@@ -216,6 +218,12 @@ public class BusService {
         }
         if (dto.getProyRep() != null) {
             bus.setProyRep(dto.getProyRep());
+        }
+        if (dto.getFechaRevisionTecnica() != null) {
+            bus.setFechaRevisionTecnica(dto.getFechaRevisionTecnica());
+        }
+        if (dto.getFechaRevisionGases() != null) {
+            bus.setFechaRevisionGases(dto.getFechaRevisionGases());
         }
 
         return busRepository.save(bus);
