@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/auditoria-menus")
+@RequestMapping("/auditoria-menus")
 public class AuditoriaMenuController {
 
     private final AuditoriaMenuService auditoriaMenuService;

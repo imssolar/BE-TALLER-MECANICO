@@ -19,7 +19,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI tallerMecanicoOpenAPI() {
         Server devServer = new Server();
-        devServer.setUrl("http://localhost:8080");
+        devServer.setUrl("http://localhost:8080/api");
         devServer.setDescription("Servidor de Desarrollo");
 
         Contact contact = new Contact();

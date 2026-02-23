@@ -112,7 +112,7 @@ public class BusService {
 
     @Transactional(readOnly = true)
     public List<Bus> findByModelo(Integer idModelo) {
-        return busRepository.findByModelo_IdModelo(idModelo);
+        return busRepository.findByModelo_Id(idModelo);
     }
 
     @Transactional(readOnly = true)

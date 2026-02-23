@@ -1,0 +1,577 @@
+{
+	"info": {
+		"name": "Taller Mecánico - Auth & Security",
+		"description": "Colección para probar la capa de seguridad JWT RSA del Taller Mecánico Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "refresh_token",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": "admin"
+		},
+		{
+			"key": "password",
+			"value": "admin123"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Auth",
+			"item": [
+				{
+					"name": "1.1 Sign Up (Crear usuario)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('access_token', jsonData.access_token);",
+									"    pm.test('Usuario creado exitosamente', function () {",
+									"        pm.expect(jsonData.access_token).to.not.be.empty;",
+									"        pm.expect(jsonData.token_type).to.eql('Bearer');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\",\n    \"role\": \"ROLE_ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/sign-up",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "sign-up"]
+						},
+						"description": "Registra un nuevo usuario. No requiere autenticación.\n\nRoles disponibles:\n- ROLE_ADMIN (READ, WRITE, DELETE)\n- ROLE_JEFE_TERMINAL (READ, WRITE)\n- ROLE_MECANICO (READ)\n- ROLE_CONDUCTOR (READ)"
+					}
+				},
+				{
+					"name": "1.2 Sign In (Login)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('access_token', jsonData.access_token);",
+									"    pm.test('Login exitoso', function () {",
+									"        pm.expect(jsonData.access_token).to.not.be.empty;",
+									"        pm.expect(jsonData.token_type).to.eql('Bearer');",
+									"        pm.expect(jsonData.user_name).to.eql(pm.collectionVariables.get('username'));",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{username}}"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/sign-in",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "sign-in"]
+						},
+						"description": "Login con HTTP Basic Auth. Retorna access_token (15 min) y guarda refresh_token en DB.\n\nEl access_token se guarda automáticamente en la variable de colección."
+					}
+				},
+				{
+					"name": "1.3 Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('access_token', jsonData.access_token);",
+									"    pm.test('Token renovado exitosamente', function () {",
+									"        pm.expect(jsonData.access_token).to.not.be.empty;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{refresh_token}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/refresh-token",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "refresh-token"]
+						},
+						"description": "Renueva el access_token usando el refresh_token.\n\nNota: Debes pegar manualmente el refresh_token en la variable de colección (se obtiene de la DB)."
+					}
+				},
+				{
+					"name": "1.4 Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "logout"]
+						},
+						"description": "Revoca el refresh token asociado. Envía el access_token como Bearer."
+					}
+				}
+			],
+			"description": "Endpoints de autenticación (/auth/*)"
+		},
+		{
+			"name": "2. Auditoría Menus",
+			"item": [
+				{
+					"name": "2.1 Crear auditoría",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\": \"admin\",\n    \"menu\": \"Buses\",\n    \"opcion\": \"CONSULTA\",\n    \"terminal\": \"TERMINAL-1\",\n    \"ip\": \"192.168.1.100\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auditoria-menus",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auditoria-menus"]
+						}
+					}
+				},
+				{
+					"name": "2.2 Listar todas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auditoria-menus",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auditoria-menus"]
+						}
+					}
+				},
+				{
+					"name": "2.3 Buscar por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auditoria-menus/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auditoria-menus", "1"]
+						}
+					}
+				},
+				{
+					"name": "2.4 Buscar por usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auditoria-menus/usuario/admin",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auditoria-menus", "usuario", "admin"]
+						}
+					}
+				},
+				{
+					"name": "2.5 Buscar por rango de fechas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auditoria-menus/fecha?desde=2026-01-01T00:00:00&hasta=2026-12-31T23:59:59",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auditoria-menus", "fecha"],
+							"query": [
+								{
+									"key": "desde",
+									"value": "2026-01-01T00:00:00"
+								},
+								{
+									"key": "hasta",
+									"value": "2026-12-31T23:59:59"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "2.6 Actualizar auditoría",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"opcion\": \"MODIFICACION\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auditoria-menus/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auditoria-menus", "1"]
+						}
+					}
+				},
+				{
+					"name": "2.7 Eliminar auditoría",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auditoria-menus/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auditoria-menus", "1"]
+						}
+					}
+				}
+			],
+			"description": "CRUD de Auditoría de Menus (/api/auditoria-menus). Requiere Bearer token."
+		},
+		{
+			"name": "3. Verificaciones de seguridad",
+			"item": [
+				{
+					"name": "3.1 Sin token → 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Debe retornar 401 sin token', function () {",
+									"    pm.expect(pm.response.code).to.eql(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"auth": {
+							"type": "noauth"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auditoria-menus",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auditoria-menus"]
+						},
+						"description": "Verifica que un endpoint protegido retorna 401 sin token."
+					}
+				},
+				{
+					"name": "3.2 Token inválido → 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Debe retornar error con token inválido', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([401, 406]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "token.invalido.aqui"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auditoria-menus",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auditoria-menus"]
+						},
+						"description": "Verifica que un token inválido es rechazado."
+					}
+				},
+				{
+					"name": "3.3 Sign Up usuario duplicado → 409",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Debe retornar 409 Conflict', function () {",
+									"    pm.expect(pm.response.code).to.eql(409);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\",\n    \"role\": \"ROLE_ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/sign-up",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "sign-up"]
+						},
+						"description": "Verifica que registrar un usuario duplicado retorna 409."
+					}
+				},
+				{
+					"name": "3.4 Sign In credenciales incorrectas → 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Debe retornar 401', function () {",
+									"    pm.expect(pm.response.code).to.eql(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin"
+								},
+								{
+									"key": "password",
+									"value": "wrong_password"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/sign-in",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "sign-in"]
+						},
+						"description": "Verifica que credenciales incorrectas retornan 401."
+					}
+				}
+			],
+			"description": "Tests de verificación de seguridad"
+		},
+		{
+			"name": "4. Usuarios adicionales",
+			"item": [
+				{
+					"name": "4.1 Crear JEFE_TERMINAL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"jefe_terminal\",\n    \"password\": \"jefe123\",\n    \"role\": \"ROLE_JEFE_TERMINAL\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/sign-up",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "sign-up"]
+						}
+					}
+				},
+				{
+					"name": "4.2 Crear MECANICO",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"mecanico1\",\n    \"password\": \"mec123\",\n    \"role\": \"ROLE_MECANICO\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/sign-up",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "sign-up"]
+						}
+					}
+				},
+				{
+					"name": "4.3 Crear CONDUCTOR",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"conductor1\",\n    \"password\": \"cond123\",\n    \"role\": \"ROLE_CONDUCTOR\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/sign-up",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "sign-up"]
+						}
+					}
+				}
+			],
+			"description": "Crear usuarios con diferentes roles para probar scopes"
+		}
+	]
+}
