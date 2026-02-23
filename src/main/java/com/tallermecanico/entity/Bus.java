@@ -1,5 +1,6 @@
 package com.tallermecanico.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -76,14 +77,15 @@ public class Bus {
     @Column(name = "fecha_revision_gases")
     private LocalDate fechaRevisionGases;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_terminal")
     private Terminal terminal;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_modelo")
     private Modelo modelo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bus", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Neumatico> neumaticos;
 
