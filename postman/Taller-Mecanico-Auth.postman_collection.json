@@ -206,7 +206,7 @@
 							"raw": "{\n    \"usuario\": \"admin\",\n    \"menu\": \"Buses\",\n    \"opcion\": \"CONSULTA\",\n    \"terminal\": \"TERMINAL-1\",\n    \"ip\": \"192.168.1.100\"\n}"
 						},
 						"url": {
-							"raw": "{{base_url}}/api/auditoria-menus",
+							"raw": "{{base_url}}/auditoria-menus",
 							"host": ["{{base_url}}"],
 							"path": ["api", "auditoria-menus"]
 						}
@@ -227,7 +227,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/auditoria-menus",
+							"raw": "{{base_url}}/auditoria-menus",
 							"host": ["{{base_url}}"],
 							"path": ["api", "auditoria-menus"]
 						}
@@ -248,7 +248,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/auditoria-menus/1",
+							"raw": "{{base_url}}/auditoria-menus/1",
 							"host": ["{{base_url}}"],
 							"path": ["api", "auditoria-menus", "1"]
 						}
@@ -269,7 +269,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/auditoria-menus/usuario/admin",
+							"raw": "{{base_url}}/auditoria-menus/usuario/admin",
 							"host": ["{{base_url}}"],
 							"path": ["api", "auditoria-menus", "usuario", "admin"]
 						}
@@ -290,7 +290,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/auditoria-menus/fecha?desde=2026-01-01T00:00:00&hasta=2026-12-31T23:59:59",
+							"raw": "{{base_url}}/auditoria-menus/fecha?desde=2026-01-01T00:00:00&hasta=2026-12-31T23:59:59",
 							"host": ["{{base_url}}"],
 							"path": ["api", "auditoria-menus", "fecha"],
 							"query": [
@@ -330,7 +330,7 @@
 							"raw": "{\n    \"opcion\": \"MODIFICACION\"\n}"
 						},
 						"url": {
-							"raw": "{{base_url}}/api/auditoria-menus/1",
+							"raw": "{{base_url}}/auditoria-menus/1",
 							"host": ["{{base_url}}"],
 							"path": ["api", "auditoria-menus", "1"]
 						}
@@ -351,7 +351,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/auditoria-menus/1",
+							"raw": "{{base_url}}/auditoria-menus/1",
 							"host": ["{{base_url}}"],
 							"path": ["api", "auditoria-menus", "1"]
 						}
@@ -385,7 +385,7 @@
 							"type": "noauth"
 						},
 						"url": {
-							"raw": "{{base_url}}/api/auditoria-menus",
+							"raw": "{{base_url}}/auditoria-menus",
 							"host": ["{{base_url}}"],
 							"path": ["api", "auditoria-menus"]
 						},
@@ -420,7 +420,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/auditoria-menus",
+							"raw": "{{base_url}}/auditoria-menus",
 							"host": ["{{base_url}}"],
 							"path": ["api", "auditoria-menus"]
 						},
