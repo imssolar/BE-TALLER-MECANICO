@@ -33,7 +33,6 @@ public class TerminalService {
         }
 
         Terminal terminal = new Terminal();
-        terminal.setIdTerminal(dto.getIdTerminal());
         terminal.setTerminal(dto.getTerminal());
         terminal.setPrefijo(dto.getPrefijo());
 
