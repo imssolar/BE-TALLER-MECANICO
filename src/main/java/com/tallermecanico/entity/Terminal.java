@@ -9,6 +9,7 @@ import java.util.List;
 public class Terminal {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_terminal")
     private Integer idTerminal;
 
