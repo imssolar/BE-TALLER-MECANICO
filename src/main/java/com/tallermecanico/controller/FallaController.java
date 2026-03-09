@@ -21,7 +21,7 @@ public class FallaController {
 
     @PostMapping
     public ResponseEntity<Falla> create(@Valid @RequestBody CreateFallaDto dto){
-        Falla falla =  fallaService.createFalla(dto);
+        Falla falla = fallaService.create(dto);
         return ResponseEntity.status(201).body(falla);
     }
 

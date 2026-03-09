@@ -1,9 +1,12 @@
 package com.tallermecanico.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +19,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI tallerMecanicoOpenAPI() {
         Server devServer = new Server();
-        devServer.setUrl("http://localhost:8080");
+        devServer.setUrl("http://localhost:8080/api");
         devServer.setDescription("Servidor de Desarrollo");
 
         Contact contact = new Contact();
@@ -29,8 +32,17 @@ public class OpenApiConfig {
                 .description("Sistema de gestión de taller mecánico - Backend API REST con Spring Boot")
                 .license(new License().name("MIT License").url("https://opensource.org/licenses/MIT"));
 
+        SecurityScheme securityScheme = new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .name("Bearer Authentication")
+                .description("Ingrese el token JWT");
+
         return new OpenAPI()
                 .info(info)
-                .servers(List.of(devServer));
+                .servers(List.of(devServer))
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
+                .components(new Components().addSecuritySchemes("Bearer Authentication", securityScheme));
     }
 }

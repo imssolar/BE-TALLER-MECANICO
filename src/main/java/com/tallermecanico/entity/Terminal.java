@@ -1,5 +1,6 @@
 package com.tallermecanico.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import java.util.List;
 public class Terminal {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_terminal")
     private Integer idTerminal;
 
@@ -17,6 +19,7 @@ public class Terminal {
     @Column(length = 3)
     private String prefijo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "terminal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Bus> buses;
 

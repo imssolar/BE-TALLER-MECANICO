@@ -1,0 +1,785 @@
+{
+	"info": {
+		"name": "Taller Mecánico - Data de Prueba",
+		"description": "Colección para crear data de prueba en orden de dependencias.\n\nFlujo:\n1. Ejecutar Sign Up + Sign In (el token se guarda automáticamente)\n2. Ejecutar las carpetas en orden numérico\n\nTodos los endpoints protegidos usan el token del Sign In automáticamente.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "0. Auth",
+			"description": "Primero crear usuario y hacer login para obtener token.",
+			"item": [
+				{
+					"name": "0.1 Sign Up (admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('access_token', jsonData.access_token);",
+									"    console.log('Token guardado automáticamente');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\",\n    \"role\": \"ROLE_ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/sign-up",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "sign-up"]
+						}
+					}
+				},
+				{
+					"name": "0.2 Sign In (admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('access_token', jsonData.access_token);",
+									"    console.log('Token guardado: ' + jsonData.access_token.substring(0, 20) + '...');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{ "key": "username", "value": "admin" },
+								{ "key": "password", "value": "admin123" }
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/sign-in",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "sign-in"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "1. Catálogos Base",
+			"description": "Tablas de lookup sin dependencias. Ejecutar antes que todo lo demás.",
+			"item": [
+				{
+					"name": "1.01 Terminal - MAIPU",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idTerminal\": 1,\n    \"terminal\": \"MAIPU\",\n    \"prefijo\": \"MP\"\n}" },
+						"url": { "raw": "{{base_url}}/terminal", "host": ["{{base_url}}"], "path": ["terminal"] }
+					}
+				},
+				{
+					"name": "1.02 Terminal - SAN BERNARDO",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idTerminal\": 2,\n    \"terminal\": \"SAN BERNARDO\",\n    \"prefijo\": \"SB\"\n}" },
+						"url": { "raw": "{{base_url}}/terminal", "host": ["{{base_url}}"], "path": ["terminal"] }
+					}
+				},
+				{
+					"name": "1.03 Terminal - PUENTE ALTO",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idTerminal\": 3,\n    \"terminal\": \"PUENTE ALTO\",\n    \"prefijo\": \"PA\"\n}" },
+						"url": { "raw": "{{base_url}}/terminal", "host": ["{{base_url}}"], "path": ["terminal"] }
+					}
+				},
+				{
+					"name": "1.04 Modelo - Volvo B7R",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"modelo\": \"Volvo B7R\",\n    \"kmDiario\": 180.00,\n    \"observaciones\": \"Bus urbano estándar\"\n}" },
+						"url": { "raw": "{{base_url}}/modelos", "host": ["{{base_url}}"], "path": ["modelos"] }
+					}
+				},
+				{
+					"name": "1.05 Modelo - Volvo B9R",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"modelo\": \"Volvo B9R\",\n    \"kmDiario\": 200.00,\n    \"observaciones\": \"Bus articulado\"\n}" },
+						"url": { "raw": "{{base_url}}/modelos", "host": ["{{base_url}}"], "path": ["modelos"] }
+					}
+				},
+				{
+					"name": "1.06 Modelo - Mercedes Benz OF1722",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"modelo\": \"Mercedes Benz OF1722\",\n    \"kmDiario\": 160.00,\n    \"observaciones\": \"Bus alimentador\"\n}" },
+						"url": { "raw": "{{base_url}}/modelos", "host": ["{{base_url}}"], "path": ["modelos"] }
+					}
+				},
+				{
+					"name": "1.07 Ruta - 210",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"ruta\": \"210 - Maipú / Estación Central\"\n}" },
+						"url": { "raw": "{{base_url}}/rutas", "host": ["{{base_url}}"], "path": ["rutas"] }
+					}
+				},
+				{
+					"name": "1.08 Ruta - 213",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"ruta\": \"213 - San Bernardo / La Florida\"\n}" },
+						"url": { "raw": "{{base_url}}/rutas", "host": ["{{base_url}}"], "path": ["rutas"] }
+					}
+				},
+				{
+					"name": "1.09 Ruta - 401",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"ruta\": \"401 - Puente Alto / Providencia\"\n}" },
+						"url": { "raw": "{{base_url}}/rutas", "host": ["{{base_url}}"], "path": ["rutas"] }
+					}
+				},
+				{
+					"name": "1.10 Ciudad - Santiago",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"ciudad\": \"Santiago\"\n}" },
+						"url": { "raw": "{{base_url}}/ciudades", "host": ["{{base_url}}"], "path": ["ciudades"] }
+					}
+				},
+				{
+					"name": "1.11 Ciudad - Valparaíso",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"ciudad\": \"Valparaíso\"\n}" },
+						"url": { "raw": "{{base_url}}/ciudades", "host": ["{{base_url}}"], "path": ["ciudades"] }
+					}
+				},
+				{
+					"name": "1.12 Comuna - Maipú",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"comuna\": \"Maipú\"\n}" },
+						"url": { "raw": "{{base_url}}/comunas", "host": ["{{base_url}}"], "path": ["comunas"] }
+					}
+				},
+				{
+					"name": "1.13 Comuna - San Bernardo",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"comuna\": \"San Bernardo\"\n}" },
+						"url": { "raw": "{{base_url}}/comunas", "host": ["{{base_url}}"], "path": ["comunas"] }
+					}
+				},
+				{
+					"name": "1.14 Comuna - Puente Alto",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"comuna\": \"Puente Alto\"\n}" },
+						"url": { "raw": "{{base_url}}/comunas", "host": ["{{base_url}}"], "path": ["comunas"] }
+					}
+				},
+				{
+					"name": "1.15 Nacionalidad - Chilena",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"nacionalidad\": \"Chilena\"\n}" },
+						"url": { "raw": "{{base_url}}/nacionalidades", "host": ["{{base_url}}"], "path": ["nacionalidades"] }
+					}
+				},
+				{
+					"name": "1.16 Nacionalidad - Peruana",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"nacionalidad\": \"Peruana\"\n}" },
+						"url": { "raw": "{{base_url}}/nacionalidades", "host": ["{{base_url}}"], "path": ["nacionalidades"] }
+					}
+				},
+				{
+					"name": "1.17 Nacionalidad - Venezolana",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"nacionalidad\": \"Venezolana\"\n}" },
+						"url": { "raw": "{{base_url}}/nacionalidades", "host": ["{{base_url}}"], "path": ["nacionalidades"] }
+					}
+				},
+				{
+					"name": "1.18 TipoVisa - Definitiva",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"tipoVisa\": \"Definitiva\"\n}" },
+						"url": { "raw": "{{base_url}}/tipo-visa", "host": ["{{base_url}}"], "path": ["tipo-visa"] }
+					}
+				},
+				{
+					"name": "1.19 TipoVisa - Temporaria",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"tipoVisa\": \"Temporaria\"\n}" },
+						"url": { "raw": "{{base_url}}/tipo-visa", "host": ["{{base_url}}"], "path": ["tipo-visa"] }
+					}
+				},
+				{
+					"name": "1.20 Cargo - Mecánico",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"cargo\": \"Mecánico\"\n}" },
+						"url": { "raw": "{{base_url}}/cargo", "host": ["{{base_url}}"], "path": ["cargo"] }
+					}
+				},
+				{
+					"name": "1.21 Cargo - Conductor",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"cargo\": \"Conductor\"\n}" },
+						"url": { "raw": "{{base_url}}/cargo", "host": ["{{base_url}}"], "path": ["cargo"] }
+					}
+				},
+				{
+					"name": "1.22 Cargo - Administrativo",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"cargo\": \"Administrativo\"\n}" },
+						"url": { "raw": "{{base_url}}/cargo", "host": ["{{base_url}}"], "path": ["cargo"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Catálogos Neumáticos",
+			"description": "Tablas de lookup para neumáticos.",
+			"item": [
+				{
+					"name": "2.01 Estado - Nuevo",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"estado\": \"Nuevo\"\n}" },
+						"url": { "raw": "{{base_url}}/estados-neumatico", "host": ["{{base_url}}"], "path": ["estados-neumatico"] }
+					}
+				},
+				{
+					"name": "2.02 Estado - Usado",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"estado\": \"Usado\"\n}" },
+						"url": { "raw": "{{base_url}}/estados-neumatico", "host": ["{{base_url}}"], "path": ["estados-neumatico"] }
+					}
+				},
+				{
+					"name": "2.03 Estado - Recauchado",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"estado\": \"Recauchado\"\n}" },
+						"url": { "raw": "{{base_url}}/estados-neumatico", "host": ["{{base_url}}"], "path": ["estados-neumatico"] }
+					}
+				},
+				{
+					"name": "2.04 Marca - Michelin",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"marca\": \"Michelin\"\n}" },
+						"url": { "raw": "{{base_url}}/marcas-neumaticos", "host": ["{{base_url}}"], "path": ["marcas-neumaticos"] }
+					}
+				},
+				{
+					"name": "2.05 Marca - Goodyear",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"marca\": \"Goodyear\"\n}" },
+						"url": { "raw": "{{base_url}}/marcas-neumaticos", "host": ["{{base_url}}"], "path": ["marcas-neumaticos"] }
+					}
+				},
+				{
+					"name": "2.06 Marca - Bridgestone",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"marca\": \"Bridgestone\"\n}" },
+						"url": { "raw": "{{base_url}}/marcas-neumaticos", "host": ["{{base_url}}"], "path": ["marcas-neumaticos"] }
+					}
+				},
+				{
+					"name": "2.07 ModeloNeum - XZA2",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"modelo\": \"XZA2\"\n}" },
+						"url": { "raw": "{{base_url}}/modelos-neumatico", "host": ["{{base_url}}"], "path": ["modelos-neumatico"] }
+					}
+				},
+				{
+					"name": "2.08 ModeloNeum - Marathon",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"modelo\": \"Marathon\"\n}" },
+						"url": { "raw": "{{base_url}}/modelos-neumatico", "host": ["{{base_url}}"], "path": ["modelos-neumatico"] }
+					}
+				},
+				{
+					"name": "2.09 ModeloNeum - R250",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"modelo\": \"R250\"\n}" },
+						"url": { "raw": "{{base_url}}/modelos-neumatico", "host": ["{{base_url}}"], "path": ["modelos-neumatico"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Catálogos Baterías",
+			"description": "Tablas de lookup para baterías.",
+			"item": [
+				{
+					"name": "3.01 Estado - Buena",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"estado\": \"Buena\"\n}" },
+						"url": { "raw": "{{base_url}}/baterias-estado", "host": ["{{base_url}}"], "path": ["baterias-estado"] }
+					}
+				},
+				{
+					"name": "3.02 Estado - Regular",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"estado\": \"Regular\"\n}" },
+						"url": { "raw": "{{base_url}}/baterias-estado", "host": ["{{base_url}}"], "path": ["baterias-estado"] }
+					}
+				},
+				{
+					"name": "3.03 Estado - Mala",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"estado\": \"Mala\"\n}" },
+						"url": { "raw": "{{base_url}}/baterias-estado", "host": ["{{base_url}}"], "path": ["baterias-estado"] }
+					}
+				},
+				{
+					"name": "3.04 MarcaBat - BOSCH",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"marca\": \"BOSCH\"\n}" },
+						"url": { "raw": "{{base_url}}/marcas-baterias", "host": ["{{base_url}}"], "path": ["marcas-baterias"] }
+					}
+				},
+				{
+					"name": "3.05 MarcaBat - VARTA",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"marca\": \"VARTA\"\n}" },
+						"url": { "raw": "{{base_url}}/marcas-baterias", "host": ["{{base_url}}"], "path": ["marcas-baterias"] }
+					}
+				},
+				{
+					"name": "3.06 MarcaBat - ACDELCO",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"marca\": \"ACDELCO\"\n}" },
+						"url": { "raw": "{{base_url}}/marcas-baterias", "host": ["{{base_url}}"], "path": ["marcas-baterias"] }
+					}
+				},
+				{
+					"name": "3.07 ModeloBat - S4 008",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"modelo\": \"S4 008\"\n}" },
+						"url": { "raw": "{{base_url}}/bateria-modelos", "host": ["{{base_url}}"], "path": ["bateria-modelos"] }
+					}
+				},
+				{
+					"name": "3.08 ModeloBat - D31R",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"modelo\": \"D31R\"\n}" },
+						"url": { "raw": "{{base_url}}/bateria-modelos", "host": ["{{base_url}}"], "path": ["bateria-modelos"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Buses",
+			"description": "Requiere: Terminal + Modelo creados previamente.",
+			"item": [
+				{
+					"name": "4.01 Bus 101 - Volvo B7R Maipú",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 101,\n    \"patenteB\": \"BJRF12\",\n    \"marcaB\": \"Volvo\",\n    \"motorB\": \"D7E\",\n    \"anioFabB\": 2018,\n    \"transmisionB\": \"Automática\",\n    \"operativaB\": true,\n    \"kmB\": 245000,\n    \"zonaB\": \"A\",\n    \"nroNeumaticosB\": 6,\n    \"activoB\": true,\n    \"nroBaterias\": 2,\n    \"idTerminal\": 1,\n    \"idModelo\": 1\n}" },
+						"url": { "raw": "{{base_url}}/buses", "host": ["{{base_url}}"], "path": ["buses"] }
+					}
+				},
+				{
+					"name": "4.02 Bus 102 - Volvo B7R Maipú",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 102,\n    \"patenteB\": \"CXHW34\",\n    \"marcaB\": \"Volvo\",\n    \"motorB\": \"D7E\",\n    \"anioFabB\": 2019,\n    \"transmisionB\": \"Automática\",\n    \"operativaB\": true,\n    \"kmB\": 198000,\n    \"zonaB\": \"A\",\n    \"nroNeumaticosB\": 6,\n    \"activoB\": true,\n    \"nroBaterias\": 2,\n    \"idTerminal\": 1,\n    \"idModelo\": 1\n}" },
+						"url": { "raw": "{{base_url}}/buses", "host": ["{{base_url}}"], "path": ["buses"] }
+					}
+				},
+				{
+					"name": "4.03 Bus 201 - Volvo B9R San Bernardo",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 201,\n    \"patenteB\": \"DKPT56\",\n    \"marcaB\": \"Volvo\",\n    \"motorB\": \"D9B\",\n    \"anioFabB\": 2020,\n    \"transmisionB\": \"Automática\",\n    \"operativaB\": true,\n    \"kmB\": 156000,\n    \"zonaB\": \"B\",\n    \"nroNeumaticosB\": 6,\n    \"activoB\": true,\n    \"nroBaterias\": 2,\n    \"idTerminal\": 2,\n    \"idModelo\": 2\n}" },
+						"url": { "raw": "{{base_url}}/buses", "host": ["{{base_url}}"], "path": ["buses"] }
+					}
+				},
+				{
+					"name": "4.04 Bus 202 - MB OF1722 San Bernardo",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 202,\n    \"patenteB\": \"FLMS78\",\n    \"marcaB\": \"Mercedes Benz\",\n    \"motorB\": \"OM926LA\",\n    \"anioFabB\": 2017,\n    \"transmisionB\": \"Manual\",\n    \"operativaB\": false,\n    \"mantencionB\": true,\n    \"kmB\": 320000,\n    \"zonaB\": \"B\",\n    \"nroNeumaticosB\": 6,\n    \"activoB\": true,\n    \"nroBaterias\": 2,\n    \"idTerminal\": 2,\n    \"idModelo\": 3\n}" },
+						"url": { "raw": "{{base_url}}/buses", "host": ["{{base_url}}"], "path": ["buses"] }
+					}
+				},
+				{
+					"name": "4.05 Bus 301 - Volvo B9R Puente Alto",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 301,\n    \"patenteB\": \"GWNT90\",\n    \"marcaB\": \"Volvo\",\n    \"motorB\": \"D9B\",\n    \"anioFabB\": 2021,\n    \"transmisionB\": \"Automática\",\n    \"operativaB\": true,\n    \"kmB\": 89000,\n    \"zonaB\": \"C\",\n    \"nroNeumaticosB\": 6,\n    \"activoB\": true,\n    \"nroBaterias\": 2,\n    \"fechaRevisionTecnica\": \"2026-06-15\",\n    \"fechaRevisionGases\": \"2026-06-15\",\n    \"idTerminal\": 3,\n    \"idModelo\": 2\n}" },
+						"url": { "raw": "{{base_url}}/buses", "host": ["{{base_url}}"], "path": ["buses"] }
+					}
+				},
+				{
+					"name": "4.06 Listar todos los buses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{base_url}}/buses", "host": ["{{base_url}}"], "path": ["buses"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Empleados",
+			"description": "Requiere: Ciudad, Comuna, Nacionalidad creados previamente.",
+			"item": [
+				{
+					"name": "5.01 Mecánico - Juan Pérez",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"rut\": \"12345678-9\",\n    \"nombres\": \"Juan Carlos\",\n    \"apellidoPaterno\": \"Pérez\",\n    \"apellidoMaterno\": \"González\",\n    \"cargo\": \"MECANICO\",\n    \"telefono\": \"912345678\",\n    \"fechaIngreso\": \"2020-03-15\",\n    \"activo\": true,\n    \"talla\": \"L\",\n    \"calzado\": 42,\n    \"fechaNacimiento\": \"1985-07-20\",\n    \"estadoCivil\": \"CASADO\",\n    \"hijos\": 2,\n    \"direccion\": \"Av. Pajaritos 1234\",\n    \"idComuna\": 1,\n    \"idCiudad\": 1,\n    \"idNacionalidad\": 1,\n    \"escolaridad\": \"MEDIA\",\n    \"contactoEmergencia\": \"María González\",\n    \"fonoContactoEmergencia\": \"987654321\",\n    \"parentesco\": \"CONYUGE\"\n}" },
+						"url": { "raw": "{{base_url}}/empleados", "host": ["{{base_url}}"], "path": ["empleados"] }
+					}
+				},
+				{
+					"name": "5.02 Mecánico - Pedro Soto",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"rut\": \"15678432-1\",\n    \"nombres\": \"Pedro\",\n    \"apellidoPaterno\": \"Soto\",\n    \"apellidoMaterno\": \"Muñoz\",\n    \"cargo\": \"MECANICO\",\n    \"telefono\": \"956781234\",\n    \"fechaIngreso\": \"2021-06-01\",\n    \"activo\": true,\n    \"talla\": \"XL\",\n    \"calzado\": 44,\n    \"fechaNacimiento\": \"1990-02-14\",\n    \"estadoCivil\": \"SOLTERO\",\n    \"hijos\": 0,\n    \"direccion\": \"Los Aromos 567\",\n    \"idComuna\": 2,\n    \"idCiudad\": 1,\n    \"idNacionalidad\": 1,\n    \"escolaridad\": \"TECNICA\"\n}" },
+						"url": { "raw": "{{base_url}}/empleados", "host": ["{{base_url}}"], "path": ["empleados"] }
+					}
+				},
+				{
+					"name": "5.03 Conductor - Carlos Rojas",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"rut\": \"11223344-5\",\n    \"nombres\": \"Carlos Andrés\",\n    \"apellidoPaterno\": \"Rojas\",\n    \"apellidoMaterno\": \"Villalobos\",\n    \"cargo\": \"CONDUCTOR\",\n    \"telefono\": \"934567890\",\n    \"fechaIngreso\": \"2019-01-10\",\n    \"activo\": true,\n    \"licenciaConducir\": \"A3\",\n    \"fechaVencimientoLicencia\": \"2027-01-10\",\n    \"talla\": \"M\",\n    \"calzado\": 41,\n    \"fechaNacimiento\": \"1980-11-30\",\n    \"estadoCivil\": \"CASADO\",\n    \"hijos\": 3,\n    \"direccion\": \"Calle Larga 890\",\n    \"idComuna\": 1,\n    \"idCiudad\": 1,\n    \"idNacionalidad\": 1,\n    \"escolaridad\": \"MEDIA\",\n    \"contactoEmergencia\": \"Rosa Villalobos\",\n    \"fonoContactoEmergencia\": \"923456789\",\n    \"parentesco\": \"MADRE\"\n}" },
+						"url": { "raw": "{{base_url}}/empleados", "host": ["{{base_url}}"], "path": ["empleados"] }
+					}
+				},
+				{
+					"name": "5.04 Conductor - Miguel Torres",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"rut\": \"16789012-3\",\n    \"nombres\": \"Miguel Ángel\",\n    \"apellidoPaterno\": \"Torres\",\n    \"apellidoMaterno\": \"Ramírez\",\n    \"cargo\": \"CONDUCTOR\",\n    \"telefono\": \"945678901\",\n    \"fechaIngreso\": \"2022-08-20\",\n    \"activo\": true,\n    \"licenciaConducir\": \"A3\",\n    \"fechaVencimientoLicencia\": \"2026-08-20\",\n    \"talla\": \"L\",\n    \"calzado\": 43,\n    \"fechaNacimiento\": \"1992-04-05\",\n    \"estadoCivil\": \"SOLTERO\",\n    \"hijos\": 1,\n    \"direccion\": \"Pasaje Los Olivos 123\",\n    \"idComuna\": 3,\n    \"idCiudad\": 1,\n    \"idNacionalidad\": 1,\n    \"escolaridad\": \"MEDIA\"\n}" },
+						"url": { "raw": "{{base_url}}/empleados", "host": ["{{base_url}}"], "path": ["empleados"] }
+					}
+				},
+				{
+					"name": "5.05 Jefe Terminal - Ana López",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"rut\": \"13456789-0\",\n    \"nombres\": \"Ana María\",\n    \"apellidoPaterno\": \"López\",\n    \"apellidoMaterno\": \"Fuentes\",\n    \"cargo\": \"JEFE_TERMINAL\",\n    \"telefono\": \"967890123\",\n    \"fechaIngreso\": \"2018-05-01\",\n    \"activo\": true,\n    \"talla\": \"S\",\n    \"calzado\": 37,\n    \"fechaNacimiento\": \"1978-09-12\",\n    \"estadoCivil\": \"DIVORCIADO\",\n    \"hijos\": 1,\n    \"direccion\": \"Av. Central 456\",\n    \"idComuna\": 1,\n    \"idCiudad\": 1,\n    \"idNacionalidad\": 1,\n    \"escolaridad\": \"UNIVERSITARIA\"\n}" },
+						"url": { "raw": "{{base_url}}/empleados", "host": ["{{base_url}}"], "path": ["empleados"] }
+					}
+				},
+				{
+					"name": "5.06 Listar empleados activos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{base_url}}/empleados/activos", "host": ["{{base_url}}"], "path": ["empleados", "activos"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Neumáticos",
+			"description": "Requiere: Bus + EstadosNeumatico + MarcasNeumatico + ModelosNeumatico.",
+			"item": [
+				{
+					"name": "6.01 Neum Bus 101 Pos 1",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 101,\n    \"idEstado\": 1,\n    \"idMarca\": 1,\n    \"idModelo\": 1,\n    \"posicion\": 1,\n    \"fechaInstalacion\": \"2025-06-15\",\n    \"kilometraje\": 45000,\n    \"presion\": 100,\n    \"profundidad\": 12.5,\n    \"marcaFuego\": \"20250615\"\n}" },
+						"url": { "raw": "{{base_url}}/neumaticos", "host": ["{{base_url}}"], "path": ["neumaticos"] }
+					}
+				},
+				{
+					"name": "6.02 Neum Bus 101 Pos 2",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 101,\n    \"idEstado\": 1,\n    \"idMarca\": 1,\n    \"idModelo\": 1,\n    \"posicion\": 2,\n    \"fechaInstalacion\": \"2025-06-15\",\n    \"kilometraje\": 45000,\n    \"presion\": 100,\n    \"profundidad\": 12.3,\n    \"marcaFuego\": \"20250615\"\n}" },
+						"url": { "raw": "{{base_url}}/neumaticos", "host": ["{{base_url}}"], "path": ["neumaticos"] }
+					}
+				},
+				{
+					"name": "6.03 Neum Bus 201 Pos 1",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 201,\n    \"idEstado\": 2,\n    \"idMarca\": 2,\n    \"idModelo\": 2,\n    \"posicion\": 1,\n    \"fechaInstalacion\": \"2024-12-01\",\n    \"kilometraje\": 78000,\n    \"presion\": 95,\n    \"profundidad\": 8.2,\n    \"marcaFuego\": \"20241201\"\n}" },
+						"url": { "raw": "{{base_url}}/neumaticos", "host": ["{{base_url}}"], "path": ["neumaticos"] }
+					}
+				},
+				{
+					"name": "6.04 Listar neumáticos del Bus 101",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{base_url}}/neumaticos/bus/101", "host": ["{{base_url}}"], "path": ["neumaticos", "bus", "101"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "7. Baterías",
+			"description": "Requiere: Bus + BateriasEstado + MarcasBateria + BateriaModelo.",
+			"item": [
+				{
+					"name": "7.01 Batería Bus 101 Pos 1",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 101,\n    \"idEstado\": 1,\n    \"idMarca\": 1,\n    \"idModelo\": 1,\n    \"posicion\": 1,\n    \"fechaInstalacion\": \"2025-09-01\",\n    \"kilometraje\": 230000,\n    \"idTerminal\": 1,\n    \"cracnKing\": \"550A\",\n    \"visor\": \"Verde\",\n    \"ohms\": 4.2,\n    \"ccaSalida\": 520\n}" },
+						"url": { "raw": "{{base_url}}/baterias", "host": ["{{base_url}}"], "path": ["baterias"] }
+					}
+				},
+				{
+					"name": "7.02 Batería Bus 101 Pos 2",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 101,\n    \"idEstado\": 1,\n    \"idMarca\": 1,\n    \"idModelo\": 1,\n    \"posicion\": 2,\n    \"fechaInstalacion\": \"2025-09-01\",\n    \"kilometraje\": 230000,\n    \"idTerminal\": 1,\n    \"cracnKing\": \"550A\",\n    \"visor\": \"Verde\",\n    \"ohms\": 4.1,\n    \"ccaSalida\": 510\n}" },
+						"url": { "raw": "{{base_url}}/baterias", "host": ["{{base_url}}"], "path": ["baterias"] }
+					}
+				},
+				{
+					"name": "7.03 Batería Bus 201 Pos 1",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"idBus\": 201,\n    \"idEstado\": 2,\n    \"idMarca\": 2,\n    \"idModelo\": 2,\n    \"posicion\": 1,\n    \"fechaInstalacion\": \"2025-03-15\",\n    \"kilometraje\": 140000,\n    \"idTerminal\": 2,\n    \"cracnKing\": \"600A\",\n    \"visor\": \"Amarillo\",\n    \"ohms\": 5.8,\n    \"ccaSalida\": 480\n}" },
+						"url": { "raw": "{{base_url}}/baterias", "host": ["{{base_url}}"], "path": ["baterias"] }
+					}
+				},
+				{
+					"name": "7.04 Listar baterías del Bus 101",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{base_url}}/baterias/bus/101", "host": ["{{base_url}}"], "path": ["baterias", "bus", "101"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "8. Órdenes de Trabajo",
+			"description": "Requiere: Bus + Terminal creados previamente.",
+			"item": [
+				{
+					"name": "8.01 OT 1001 - Mantención Bus 101",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"id\": 1001,\n    \"idBus\": 101,\n    \"idTerminal\": 1,\n    \"tipoOt\": \"MANTENCION\",\n    \"km\": 245000,\n    \"ppu\": \"BJRF12\",\n    \"conductor\": \"Carlos Rojas\",\n    \"fechaHoraIngreso\": \"2026-02-23T08:00:00\",\n    \"trabajoARealizar\": \"Cambio de aceite motor, filtros y revisión de frenos\",\n    \"obsTrabMecanico\": \"Se detecta desgaste en pastillas delanteras\",\n    \"jefeTurnoPatio\": \"Ana López\",\n    \"horaJefeTurnoPatio\": \"2026-02-23T08:15:00\",\n    \"itemFalla\": \"Motor\"\n}" },
+						"url": { "raw": "{{base_url}}/ordenes-trabajo", "host": ["{{base_url}}"], "path": ["ordenes-trabajo"] }
+					}
+				},
+				{
+					"name": "8.02 OT 1002 - Correctiva Bus 201",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"id\": 1002,\n    \"idBus\": 201,\n    \"idTerminal\": 2,\n    \"tipoOt\": \"CORRECTIVA\",\n    \"km\": 156000,\n    \"ppu\": \"DKPT56\",\n    \"conductor\": \"Miguel Torres\",\n    \"fechaHoraIngreso\": \"2026-02-23T09:30:00\",\n    \"trabajoARealizar\": \"Reparación sistema eléctrico - falla en alternador\",\n    \"obsTrabElectrico\": \"Alternador no carga batería. Se requiere reemplazo completo.\",\n    \"jefeTurnoPatio\": \"Ana López\",\n    \"horaJefeTurnoPatio\": \"2026-02-23T09:45:00\",\n    \"itemFalla\": \"Eléctrico\"\n}" },
+						"url": { "raw": "{{base_url}}/ordenes-trabajo", "host": ["{{base_url}}"], "path": ["ordenes-trabajo"] }
+					}
+				},
+				{
+					"name": "8.03 OT 1003 - Preventiva Bus 301",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"id\": 1003,\n    \"idBus\": 301,\n    \"idTerminal\": 3,\n    \"tipoOt\": \"PREVENTIVA\",\n    \"km\": 89000,\n    \"ppu\": \"GWNT90\",\n    \"conductor\": \"Carlos Rojas\",\n    \"fechaHoraIngreso\": \"2026-02-23T10:00:00\",\n    \"fechaHoraSalida\": \"2026-02-23T14:00:00\",\n    \"trabajoARealizar\": \"Revisión técnica programada - inspección general\",\n    \"obsTrabMecanico\": \"Todo en orden, bus en buen estado\",\n    \"jefeTurnoPatio\": \"Ana López\",\n    \"horaJefeTurnoPatio\": \"2026-02-23T10:15:00\",\n    \"jefeTurnoMant\": \"Juan Pérez\",\n    \"horaJefeTurnoMant\": \"2026-02-23T14:00:00\",\n    \"supervCalidad\": \"Ana López\",\n    \"horaSupervCalidad\": \"2026-02-23T14:30:00\",\n    \"obsControlCalidad\": \"Aprobado - sin observaciones\",\n    \"itemFalla\": \"General\"\n}" },
+						"url": { "raw": "{{base_url}}/ordenes-trabajo", "host": ["{{base_url}}"], "path": ["ordenes-trabajo"] }
+					}
+				},
+				{
+					"name": "8.04 OT 1004 - Emergencia Bus 202",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n    \"id\": 1004,\n    \"idBus\": 202,\n    \"idTerminal\": 2,\n    \"tipoOt\": \"EMERGENCIA\",\n    \"km\": 320000,\n    \"ppu\": \"FLMS78\",\n    \"conductor\": \"Miguel Torres\",\n    \"fechaHoraIngreso\": \"2026-02-22T16:30:00\",\n    \"trabajoARealizar\": \"Fuga de aceite en motor - reparación urgente\",\n    \"obsTrabMecanico\": \"Empaquetadura de tapa de válvulas dañada. Se reemplaza y queda operativo.\",\n    \"jefeTurnoPatio\": \"Ana López\",\n    \"horaJefeTurnoPatio\": \"2026-02-22T16:45:00\",\n    \"itemFalla\": \"Motor\"\n}" },
+						"url": { "raw": "{{base_url}}/ordenes-trabajo", "host": ["{{base_url}}"], "path": ["ordenes-trabajo"] }
+					}
+				},
+				{
+					"name": "8.05 Listar todas las OT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{base_url}}/ordenes-trabajo", "host": ["{{base_url}}"], "path": ["ordenes-trabajo"] }
+					}
+				},
+				{
+					"name": "8.06 OT por Bus 101",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{base_url}}/ordenes-trabajo/bus/101", "host": ["{{base_url}}"], "path": ["ordenes-trabajo", "bus", "101"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "9. Consultas Generales",
+			"description": "Endpoints GET para verificar la data creada.",
+			"item": [
+				{
+					"name": "9.01 Listar Terminales",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/terminal", "host": ["{{base_url}}"], "path": ["terminal"] } }
+				},
+				{
+					"name": "9.02 Listar Modelos",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/modelos", "host": ["{{base_url}}"], "path": ["modelos"] } }
+				},
+				{
+					"name": "9.03 Listar Rutas",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/rutas", "host": ["{{base_url}}"], "path": ["rutas"] } }
+				},
+				{
+					"name": "9.04 Listar Buses",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/buses", "host": ["{{base_url}}"], "path": ["buses"] } }
+				},
+				{
+					"name": "9.05 Listar Buses operativos",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/buses/operativos", "host": ["{{base_url}}"], "path": ["buses", "operativos"] } }
+				},
+				{
+					"name": "9.06 Listar Buses en mantención",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/buses/en-mantencion", "host": ["{{base_url}}"], "path": ["buses", "en-mantencion"] } }
+				},
+				{
+					"name": "9.07 Estadísticas Buses",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/buses/estadisticas", "host": ["{{base_url}}"], "path": ["buses", "estadisticas"] } }
+				},
+				{
+					"name": "9.08 Listar Empleados",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/empleados", "host": ["{{base_url}}"], "path": ["empleados"] } }
+				},
+				{
+					"name": "9.09 Listar Conductores",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/empleados/conductores", "host": ["{{base_url}}"], "path": ["empleados", "conductores"] } }
+				},
+				{
+					"name": "9.10 Listar Mecánicos",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/empleados/mecanicos", "host": ["{{base_url}}"], "path": ["empleados", "mecanicos"] } }
+				},
+				{
+					"name": "9.11 Listar Neumáticos",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/neumaticos", "host": ["{{base_url}}"], "path": ["neumaticos"] } }
+				},
+				{
+					"name": "9.12 Listar Baterías",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/baterias", "host": ["{{base_url}}"], "path": ["baterias"] } }
+				},
+				{
+					"name": "9.13 Listar Órdenes de Trabajo",
+					"request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/ordenes-trabajo", "host": ["{{base_url}}"], "path": ["ordenes-trabajo"] } }
+				}
+			]
+		}
+	]
+}

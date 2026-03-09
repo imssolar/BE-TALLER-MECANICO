@@ -4,7 +4,7 @@ import com.tallermecanico.dto.request.CreateEmpleadoDto;
 import com.tallermecanico.dto.request.UpdateEmpleadoDto;
 import com.tallermecanico.dto.response.DeleteEmpleadoResponseDto;
 import com.tallermecanico.dto.response.EmpleadoResponseDto;
-import com.tallermecanico.entity.Empleado;
+import com.tallermecanico.entity.*;
 import com.tallermecanico.enums.CargoEmpleado;
 import com.tallermecanico.exception.DuplicateResourceException;
 import com.tallermecanico.exception.ResourceNotFoundException;
@@ -19,9 +19,24 @@ import java.util.stream.Collectors;
 public class EmpleadoService {
 
     private final EmpleadoRepository empleadoRepository;
+    private final ComunaService comunaService;
+    private final CiudadService ciudadService;
+    private final NacionalidadService nacionalidadService;
+    private final TipoVisaService tipoVisaService;
+    private final TallerService tallerService;
 
-    public EmpleadoService(EmpleadoRepository empleadoRepository) {
+    public EmpleadoService(EmpleadoRepository empleadoRepository,
+                           ComunaService comunaService,
+                           CiudadService ciudadService,
+                           NacionalidadService nacionalidadService,
+                           TipoVisaService tipoVisaService,
+                           TallerService tallerService) {
         this.empleadoRepository = empleadoRepository;
+        this.comunaService = comunaService;
+        this.ciudadService = ciudadService;
+        this.nacionalidadService = nacionalidadService;
+        this.tipoVisaService = tipoVisaService;
+        this.tallerService = tallerService;
     }
 
     @Transactional
@@ -42,6 +57,44 @@ public class EmpleadoService {
         empleado.setActivo(dto.getActivo() != null ? dto.getActivo() : true);
         empleado.setLicenciaConducir(dto.getLicenciaConducir());
         empleado.setFechaVencimientoLicencia(dto.getFechaVencimientoLicencia());
+
+        // Nuevos campos directos
+        empleado.setTalla(dto.getTalla());
+        empleado.setCalzado(dto.getCalzado());
+        empleado.setFechaNacimiento(dto.getFechaNacimiento());
+        empleado.setEstadoCivil(dto.getEstadoCivil());
+        empleado.setHijos(dto.getHijos());
+        empleado.setDireccion(dto.getDireccion());
+        empleado.setTelefono2(dto.getTelefono2());
+        empleado.setEscolaridad(dto.getEscolaridad());
+        empleado.setContactoEmergencia(dto.getContactoEmergencia());
+        empleado.setFonoContactoEmergencia(dto.getFonoContactoEmergencia());
+        empleado.setParentesco(dto.getParentesco());
+        empleado.setExTrabajador(dto.getExTrabajador() != null ? dto.getExTrabajador() : false);
+        empleado.setObservaciones(dto.getObservaciones());
+        empleado.setCosto(dto.getCosto());
+
+        // Relaciones ManyToOne
+        if (dto.getIdComuna() != null) {
+            Comuna comuna = comunaService.findById(dto.getIdComuna());
+            empleado.setComuna(comuna);
+        }
+        if (dto.getIdCiudad() != null) {
+            Ciudad ciudad = ciudadService.findById(dto.getIdCiudad());
+            empleado.setCiudad(ciudad);
+        }
+        if (dto.getIdNacionalidad() != null) {
+            Nacionalidad nacionalidad = nacionalidadService.findById(dto.getIdNacionalidad());
+            empleado.setNacionalidad(nacionalidad);
+        }
+        if (dto.getIdTipoVisa() != null) {
+            TipoVisa tipoVisa = tipoVisaService.findById(dto.getIdTipoVisa());
+            empleado.setTipoVisa(tipoVisa);
+        }
+        if (dto.getIdTaller() != null) {
+            Taller taller = tallerService.findById(dto.getIdTaller());
+            empleado.setTaller(taller);
+        }
 
         Empleado savedEmpleado = empleadoRepository.save(empleado);
         return toResponseDto(savedEmpleado);
@@ -130,6 +183,72 @@ public class EmpleadoService {
             empleado.setFechaVencimientoLicencia(dto.getFechaVencimientoLicencia());
         }
 
+        // Nuevos campos directos
+        if (dto.getTalla() != null) {
+            empleado.setTalla(dto.getTalla());
+        }
+        if (dto.getCalzado() != null) {
+            empleado.setCalzado(dto.getCalzado());
+        }
+        if (dto.getFechaNacimiento() != null) {
+            empleado.setFechaNacimiento(dto.getFechaNacimiento());
+        }
+        if (dto.getEstadoCivil() != null) {
+            empleado.setEstadoCivil(dto.getEstadoCivil());
+        }
+        if (dto.getHijos() != null) {
+            empleado.setHijos(dto.getHijos());
+        }
+        if (dto.getDireccion() != null) {
+            empleado.setDireccion(dto.getDireccion());
+        }
+        if (dto.getTelefono2() != null) {
+            empleado.setTelefono2(dto.getTelefono2());
+        }
+        if (dto.getEscolaridad() != null) {
+            empleado.setEscolaridad(dto.getEscolaridad());
+        }
+        if (dto.getContactoEmergencia() != null) {
+            empleado.setContactoEmergencia(dto.getContactoEmergencia());
+        }
+        if (dto.getFonoContactoEmergencia() != null) {
+            empleado.setFonoContactoEmergencia(dto.getFonoContactoEmergencia());
+        }
+        if (dto.getParentesco() != null) {
+            empleado.setParentesco(dto.getParentesco());
+        }
+        if (dto.getExTrabajador() != null) {
+            empleado.setExTrabajador(dto.getExTrabajador());
+        }
+        if (dto.getObservaciones() != null) {
+            empleado.setObservaciones(dto.getObservaciones());
+        }
+        if (dto.getCosto() != null) {
+            empleado.setCosto(dto.getCosto());
+        }
+
+        // Relaciones ManyToOne
+        if (dto.getIdComuna() != null) {
+            Comuna comuna = comunaService.findById(dto.getIdComuna());
+            empleado.setComuna(comuna);
+        }
+        if (dto.getIdCiudad() != null) {
+            Ciudad ciudad = ciudadService.findById(dto.getIdCiudad());
+            empleado.setCiudad(ciudad);
+        }
+        if (dto.getIdNacionalidad() != null) {
+            Nacionalidad nacionalidad = nacionalidadService.findById(dto.getIdNacionalidad());
+            empleado.setNacionalidad(nacionalidad);
+        }
+        if (dto.getIdTipoVisa() != null) {
+            TipoVisa tipoVisa = tipoVisaService.findById(dto.getIdTipoVisa());
+            empleado.setTipoVisa(tipoVisa);
+        }
+        if (dto.getIdTaller() != null) {
+            Taller taller = tallerService.findById(dto.getIdTaller());
+            empleado.setTaller(taller);
+        }
+
         Empleado updatedEmpleado = empleadoRepository.save(empleado);
         return toResponseDto(updatedEmpleado);
     }
@@ -168,18 +287,52 @@ public class EmpleadoService {
     }
 
     private EmpleadoResponseDto toResponseDto(Empleado empleado) {
-        return new EmpleadoResponseDto(
-            empleado.getId(),
-            empleado.getRut(),
-            empleado.getNombres(),
-            empleado.getApellidoPaterno(),
-            empleado.getApellidoMaterno(),
-            empleado.getCargo(),
-            empleado.getTelefono(),
-            empleado.getActivo(),
-            empleado.getFechaIngreso(),
-            empleado.getLicenciaConducir(),
-            empleado.getFechaVencimientoLicencia()
-        );
+        EmpleadoResponseDto dto = new EmpleadoResponseDto();
+        dto.setId(empleado.getId());
+        dto.setRut(empleado.getRut());
+        dto.setNombres(empleado.getNombres());
+        dto.setApellidoPaterno(empleado.getApellidoPaterno());
+        dto.setApellidoMaterno(empleado.getApellidoMaterno());
+        dto.setCargo(empleado.getCargo());
+        dto.setTelefono(empleado.getTelefono());
+        dto.setActivo(empleado.getActivo());
+        dto.setFechaIngreso(empleado.getFechaIngreso());
+        dto.setLicenciaConducir(empleado.getLicenciaConducir());
+        dto.setFechaVencimientoLicencia(empleado.getFechaVencimientoLicencia());
+
+        // Nuevos campos
+        dto.setTalla(empleado.getTalla());
+        dto.setCalzado(empleado.getCalzado());
+        dto.setFechaNacimiento(empleado.getFechaNacimiento());
+        dto.setEstadoCivil(empleado.getEstadoCivil());
+        dto.setHijos(empleado.getHijos());
+        dto.setDireccion(empleado.getDireccion());
+        dto.setTelefono2(empleado.getTelefono2());
+        dto.setEscolaridad(empleado.getEscolaridad());
+        dto.setContactoEmergencia(empleado.getContactoEmergencia());
+        dto.setFonoContactoEmergencia(empleado.getFonoContactoEmergencia());
+        dto.setParentesco(empleado.getParentesco());
+        dto.setExTrabajador(empleado.getExTrabajador());
+        dto.setObservaciones(empleado.getObservaciones());
+        dto.setCosto(empleado.getCosto());
+
+        // Relaciones - devolver nombre legible
+        if (empleado.getComuna() != null) {
+            dto.setComuna(empleado.getComuna().getComuna());
+        }
+        if (empleado.getCiudad() != null) {
+            dto.setCiudad(empleado.getCiudad().getCiudad());
+        }
+        if (empleado.getNacionalidad() != null) {
+            dto.setNacionalidad(empleado.getNacionalidad().getNacionalidad());
+        }
+        if (empleado.getTipoVisa() != null) {
+            dto.setTipoVisa(empleado.getTipoVisa().getTipoVisa());
+        }
+        if (empleado.getTaller() != null) {
+            dto.setTaller(empleado.getTaller().getTaller());
+        }
+
+        return dto;
     }
 }

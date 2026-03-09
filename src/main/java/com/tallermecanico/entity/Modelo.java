@@ -1,5 +1,6 @@
 package com.tallermecanico.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -9,18 +10,20 @@ import java.util.List;
 public class Modelo {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_modelo")
-    private Integer idModelo;
+    private Integer id;
 
-    @Column(length = 15)
+    @Column(length = 100, nullable = false, unique = true)
     private String modelo;
 
-    @Column(name = "km_diario", precision = 18, scale = 0)
+    @Column(name = "km_diario", precision = 10, scale = 2)
     private BigDecimal kmDiario;
 
-    @Column(length = 35)
-    private String obs;
+    @Column(name = "obs", length = 255)
+    private String observaciones;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "modelo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Bus> buses;
 
@@ -28,20 +31,19 @@ public class Modelo {
     public Modelo() {
     }
 
-    public Modelo(Integer idModelo, String modelo, BigDecimal kmDiario, String obs) {
-        this.idModelo = idModelo;
+    public Modelo(String modelo, BigDecimal kmDiario, String observaciones) {
         this.modelo = modelo;
         this.kmDiario = kmDiario;
-        this.obs = obs;
+        this.observaciones = observaciones;
     }
 
     // Getters and Setters
-    public Integer getIdModelo() {
-        return idModelo;
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdModelo(Integer idModelo) {
-        this.idModelo = idModelo;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getModelo() {
@@ -60,12 +62,12 @@ public class Modelo {
         this.kmDiario = kmDiario;
     }
 
-    public String getObs() {
-        return obs;
+    public String getObservaciones() {
+        return observaciones;
     }
 
-    public void setObs(String obs) {
-        this.obs = obs;
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public List<Bus> getBuses() {

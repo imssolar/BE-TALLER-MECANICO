@@ -1,6 +1,8 @@
 package com.tallermecanico.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -69,14 +71,21 @@ public class Bus {
     @Column(name = "proy_rep", length = 10)
     private String proyRep;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "fecha_revision_tecnica")
+    private LocalDate fechaRevisionTecnica;
+
+    @Column(name = "fecha_revision_gases")
+    private LocalDate fechaRevisionGases;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_terminal")
     private Terminal terminal;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_modelo")
     private Modelo modelo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bus", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Neumatico> neumaticos;
 
@@ -247,6 +256,22 @@ public class Bus {
 
     public void setProyRep(String proyRep) {
         this.proyRep = proyRep;
+    }
+
+    public LocalDate getFechaRevisionTecnica() {
+        return fechaRevisionTecnica;
+    }
+
+    public void setFechaRevisionTecnica(LocalDate fechaRevisionTecnica) {
+        this.fechaRevisionTecnica = fechaRevisionTecnica;
+    }
+
+    public LocalDate getFechaRevisionGases() {
+        return fechaRevisionGases;
+    }
+
+    public void setFechaRevisionGases(LocalDate fechaRevisionGases) {
+        this.fechaRevisionGases = fechaRevisionGases;
     }
 
     public Terminal getTerminal() {

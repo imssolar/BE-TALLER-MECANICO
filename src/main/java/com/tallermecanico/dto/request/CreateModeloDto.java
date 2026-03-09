@@ -1,50 +1,39 @@
 package com.tallermecanico.dto.request;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 public class CreateModeloDto {
 
-    @NotNull(message = "El ID del modelo es requerido")
-    private Integer idModelo;
-
-    @Size(max = 15, message = "El nombre del modelo no puede exceder 15 caracteres")
+    @NotBlank(message = "El nombre del modelo es requerido")
+    @Size(max = 100, message = "El nombre del modelo no debe exceder los 100 caracteres")
     private String modelo;
 
-    @Min(value = 0, message = "El kilometraje diario no puede ser negativo")
+    @DecimalMin(value = "0", message = "El kilometraje diario debe ser mayor o igual a 0")
     private BigDecimal kmDiario;
 
-    @Size(max = 35, message = "Las observaciones no pueden exceder 35 caracteres")
-    private String obs;
+    @Size(max = 255, message = "Las observaciones no deben exceder los 255 caracteres")
+    private String observaciones;
 
     // Constructors
     public CreateModeloDto() {
     }
 
-    public CreateModeloDto(Integer idModelo, String modelo, BigDecimal kmDiario, String obs) {
-        this.idModelo = idModelo;
+    public CreateModeloDto(String modelo, BigDecimal kmDiario, String observaciones) {
         this.modelo = modelo;
         this.kmDiario = kmDiario;
-        this.obs = obs;
+        this.observaciones = observaciones;
     }
 
     // Getters and Setters
-    public Integer getIdModelo() {
-        return idModelo;
-    }
-
-    public void setIdModelo(Integer idModelo) {
-        this.idModelo = idModelo;
-    }
-
     public String getModelo() {
         return modelo;
     }
 
     public void setModelo(String modelo) {
-        this.modelo = modelo != null ? modelo.trim().toUpperCase() : null;
+        this.modelo = modelo;
     }
 
     public BigDecimal getKmDiario() {
@@ -55,11 +44,11 @@ public class CreateModeloDto {
         this.kmDiario = kmDiario;
     }
 
-    public String getObs() {
-        return obs;
+    public String getObservaciones() {
+        return observaciones;
     }
 
-    public void setObs(String obs) {
-        this.obs = obs;
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 }

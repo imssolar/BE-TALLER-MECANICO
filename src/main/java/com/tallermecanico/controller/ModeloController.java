@@ -2,6 +2,7 @@ package com.tallermecanico.controller;
 
 import com.tallermecanico.dto.request.CreateModeloDto;
 import com.tallermecanico.dto.request.UpdateModeloDto;
+import com.tallermecanico.dto.response.DeleteModeloResponseDto;
 import com.tallermecanico.entity.Modelo;
 import com.tallermecanico.service.ModeloService;
 import jakarta.validation.Valid;
@@ -41,14 +42,14 @@ public class ModeloController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Modelo> update(@PathVariable Integer id,
-                                        @Valid @RequestBody UpdateModeloDto dto) {
+                                          @Valid @RequestBody UpdateModeloDto dto) {
         Modelo modelo = modeloService.update(id, dto);
         return ResponseEntity.ok(modelo);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        modeloService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<DeleteModeloResponseDto> delete(@PathVariable Integer id) {
+        DeleteModeloResponseDto response = modeloService.delete(id);
+        return ResponseEntity.ok(response);
     }
 }

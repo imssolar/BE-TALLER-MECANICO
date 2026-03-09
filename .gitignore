@@ -42,3 +42,6 @@ CLAUDE.md
 ### Environment ###
 .env
 .env.local
+
+### RSA Keys ###
+src/main/resources/certs/

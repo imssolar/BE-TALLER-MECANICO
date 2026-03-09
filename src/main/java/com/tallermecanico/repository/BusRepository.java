@@ -21,7 +21,7 @@ public interface BusRepository extends JpaRepository<Bus, Integer> {
 
     List<Bus> findByTerminal_IdTerminal(Integer idTerminal);
 
-    List<Bus> findByModelo_IdModelo(Integer idModelo);
+    List<Bus> findByModelo_Id(Integer idModelo);
 
     boolean existsByPatenteB(String patenteB);
 
