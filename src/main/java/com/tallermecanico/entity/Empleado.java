@@ -1,10 +1,6 @@
 package com.tallermecanico.entity;
 
-import com.tallermecanico.enums.CargoEmpleado;
-import com.tallermecanico.enums.Escolaridad;
-import com.tallermecanico.enums.EstadoCivil;
-import com.tallermecanico.enums.Parentesco;
-import com.tallermecanico.enums.Talla;
+import com.tallermecanico.enums.*;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -42,8 +38,9 @@ public class Empleado {
     @Column(name = "fecha_ingreso")
     private LocalDate fechaIngreso;
 
-    @Column(name = "licencia_conducir", length = 10)
-    private String licenciaConducir;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "licencia_conducir", nullable = true)
+    private LicenciaConducir licenciaConducir;
 
     @Column(name = "fecha_vencimiento_licencia")
     private LocalDate fechaVencimientoLicencia;
@@ -205,11 +202,11 @@ public class Empleado {
         this.fechaIngreso = fechaIngreso;
     }
 
-    public String getLicenciaConducir() {
+    public LicenciaConducir getLicenciaConducir() {
         return licenciaConducir;
     }
 
-    public void setLicenciaConducir(String licenciaConducir) {
+    public void setLicenciaConducir(LicenciaConducir licenciaConducir) {
         this.licenciaConducir = licenciaConducir;
     }
 

@@ -4,6 +4,7 @@ import com.tallermecanico.enums.CargoEmpleado;
 import com.tallermecanico.enums.Escolaridad;
 import com.tallermecanico.enums.EstadoCivil;
 import com.tallermecanico.enums.Parentesco;
+import com.tallermecanico.enums.LicenciaConducir;
 import com.tallermecanico.enums.Talla;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
@@ -41,8 +42,7 @@ public class CreateEmpleadoDto {
 
     private Boolean activo = true;
 
-    @Size(max = 10, message = "La licencia de conducir no puede exceder 10 caracteres")
-    private String licenciaConducir;
+    private LicenciaConducir licenciaConducir;
 
     private LocalDate fechaVencimientoLicencia;
 
@@ -163,11 +163,11 @@ public class CreateEmpleadoDto {
         this.activo = activo;
     }
 
-    public String getLicenciaConducir() {
+    public LicenciaConducir getLicenciaConducir() {
         return licenciaConducir;
     }
 
-    public void setLicenciaConducir(String licenciaConducir) {
+    public void setLicenciaConducir(LicenciaConducir licenciaConducir) {
         this.licenciaConducir = licenciaConducir;
     }
 

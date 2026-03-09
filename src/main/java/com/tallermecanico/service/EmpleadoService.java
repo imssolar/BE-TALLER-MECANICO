@@ -297,7 +297,7 @@ public class EmpleadoService {
         dto.setTelefono(empleado.getTelefono());
         dto.setActivo(empleado.getActivo());
         dto.setFechaIngreso(empleado.getFechaIngreso());
-        dto.setLicenciaConducir(empleado.getLicenciaConducir());
+        dto.setLicenciaConducir(empleado.getLicenciaConducir() != null ? empleado.getLicenciaConducir().getDisplayName() : null);
         dto.setFechaVencimientoLicencia(empleado.getFechaVencimientoLicencia());
 
         // Nuevos campos
