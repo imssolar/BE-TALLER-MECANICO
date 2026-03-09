@@ -4,6 +4,7 @@ import com.tallermecanico.dto.request.CreateEmpleadoDto;
 import com.tallermecanico.dto.request.UpdateEmpleadoDto;
 import com.tallermecanico.dto.response.DeleteEmpleadoResponseDto;
 import com.tallermecanico.dto.response.EmpleadoResponseDto;
+import com.tallermecanico.enums.CargoEmpleado;
 import com.tallermecanico.service.EmpleadoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -46,15 +47,9 @@ public class EmpleadoController {
         return ResponseEntity.ok(empleados);
     }
 
-    @GetMapping("/conductores")
-    public ResponseEntity<List<EmpleadoResponseDto>> findConductores() {
-        List<EmpleadoResponseDto> empleados = empleadoService.findConductores();
-        return ResponseEntity.ok(empleados);
-    }
-
-    @GetMapping("/mecanicos")
-    public ResponseEntity<List<EmpleadoResponseDto>> findMecanicos() {
-        List<EmpleadoResponseDto> empleados = empleadoService.findMecanicos();
+    @GetMapping("/cargo/{cargo}")
+    public ResponseEntity<List<EmpleadoResponseDto>> findByCargo(@PathVariable CargoEmpleado cargo) {
+        List<EmpleadoResponseDto> empleados = empleadoService.findByCargo(cargo);
         return ResponseEntity.ok(empleados);
     }
 

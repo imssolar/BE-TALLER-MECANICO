@@ -31,8 +31,9 @@ public class OrdenTrabajo {
     @Column(length = 8)
     private String ppu;
 
-    @Column(length = 30)
-    private String conductor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_conductor")
+    private Empleado conductor;
 
     @Column(name = "fecha_hora_ingreso")
     private LocalDateTime fechaHoraIngreso;
@@ -49,20 +50,23 @@ public class OrdenTrabajo {
     @Column(name = "obs_trab_electrico", length = 500)
     private String obsTrabElectrico;
 
-    @Column(name = "jefe_turno_patio", length = 50)
-    private String jefeTurnoPatio;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_jefe_turno_patio")
+    private Empleado jefeTurnoPatio;
 
     @Column(name = "hora_jefe_turno_patio")
     private LocalDateTime horaJefeTurnoPatio;
 
-    @Column(name = "jefe_turno_mant", length = 50)
-    private String jefeTurnoMant;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_jefe_turno_mant")
+    private Empleado jefeTurnoMant;
 
     @Column(name = "hora_jefe_turno_mant")
     private LocalDateTime horaJefeTurnoMant;
 
-    @Column(name = "superv_calidad", length = 50)
-    private String supervCalidad;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_superv_calidad")
+    private Empleado supervCalidad;
 
     @Column(name = "hora_superv_calidad")
     private LocalDateTime horaSupervCalidad;
@@ -143,11 +147,11 @@ public class OrdenTrabajo {
         this.ppu = ppu;
     }
 
-    public String getConductor() {
+    public Empleado getConductor() {
         return conductor;
     }
 
-    public void setConductor(String conductor) {
+    public void setConductor(Empleado conductor) {
         this.conductor = conductor;
     }
 
@@ -191,11 +195,11 @@ public class OrdenTrabajo {
         this.obsTrabElectrico = obsTrabElectrico;
     }
 
-    public String getJefeTurnoPatio() {
+    public Empleado getJefeTurnoPatio() {
         return jefeTurnoPatio;
     }
 
-    public void setJefeTurnoPatio(String jefeTurnoPatio) {
+    public void setJefeTurnoPatio(Empleado jefeTurnoPatio) {
         this.jefeTurnoPatio = jefeTurnoPatio;
     }
 
@@ -207,11 +211,11 @@ public class OrdenTrabajo {
         this.horaJefeTurnoPatio = horaJefeTurnoPatio;
     }
 
-    public String getJefeTurnoMant() {
+    public Empleado getJefeTurnoMant() {
         return jefeTurnoMant;
     }
 
-    public void setJefeTurnoMant(String jefeTurnoMant) {
+    public void setJefeTurnoMant(Empleado jefeTurnoMant) {
         this.jefeTurnoMant = jefeTurnoMant;
     }
 
@@ -223,11 +227,11 @@ public class OrdenTrabajo {
         this.horaJefeTurnoMant = horaJefeTurnoMant;
     }
 
-    public String getSupervCalidad() {
+    public Empleado getSupervCalidad() {
         return supervCalidad;
     }
 
-    public void setSupervCalidad(String supervCalidad) {
+    public void setSupervCalidad(Empleado supervCalidad) {
         this.supervCalidad = supervCalidad;
     }
 

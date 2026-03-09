@@ -4,6 +4,7 @@ import com.tallermecanico.dto.request.CreateOrdenTrabajoDto;
 import com.tallermecanico.dto.request.UpdateOrdenTrabajoDto;
 import com.tallermecanico.dto.response.DeleteOrdenTrabajoResponseDto;
 import com.tallermecanico.entity.Bus;
+import com.tallermecanico.entity.Empleado;
 import com.tallermecanico.entity.OrdenTrabajo;
 import com.tallermecanico.entity.Terminal;
 import com.tallermecanico.exception.DuplicateResourceException;
@@ -20,13 +21,16 @@ public class OrdenTrabajoService {
     private final OrdenTrabajoRepository ordenTrabajoRepository;
     private final BusService busService;
     private final TerminalService terminalService;
+    private final EmpleadoService empleadoService;
 
     public OrdenTrabajoService(OrdenTrabajoRepository ordenTrabajoRepository,
                                BusService busService,
-                               TerminalService terminalService) {
+                               TerminalService terminalService,
+                               EmpleadoService empleadoService) {
         this.ordenTrabajoRepository = ordenTrabajoRepository;
         this.busService = busService;
         this.terminalService = terminalService;
+        this.empleadoService = empleadoService;
     }
 
     @Transactional
@@ -41,17 +45,13 @@ public class OrdenTrabajoService {
         ordenTrabajo.setNroOtManager(dto.getNroOtManager());
         ordenTrabajo.setKm(dto.getKm());
         ordenTrabajo.setPpu(dto.getPpu());
-        ordenTrabajo.setConductor(dto.getConductor());
         ordenTrabajo.setFechaHoraIngreso(dto.getFechaHoraIngreso());
         ordenTrabajo.setFechaHoraSalida(dto.getFechaHoraSalida());
         ordenTrabajo.setTrabajoARealizar(dto.getTrabajoARealizar());
         ordenTrabajo.setObsTrabMecanico(dto.getObsTrabMecanico());
         ordenTrabajo.setObsTrabElectrico(dto.getObsTrabElectrico());
-        ordenTrabajo.setJefeTurnoPatio(dto.getJefeTurnoPatio());
         ordenTrabajo.setHoraJefeTurnoPatio(dto.getHoraJefeTurnoPatio());
-        ordenTrabajo.setJefeTurnoMant(dto.getJefeTurnoMant());
         ordenTrabajo.setHoraJefeTurnoMant(dto.getHoraJefeTurnoMant());
-        ordenTrabajo.setSupervCalidad(dto.getSupervCalidad());
         ordenTrabajo.setHoraSupervCalidad(dto.getHoraSupervCalidad());
         ordenTrabajo.setObsControlCalidad(dto.getObsControlCalidad());
         ordenTrabajo.setRepAutoriza(dto.getRepAutoriza());
@@ -67,6 +67,26 @@ public class OrdenTrabajoService {
         if (dto.getIdTerminal() != null) {
             Terminal terminal = terminalService.findById(dto.getIdTerminal());
             ordenTrabajo.setTerminal(terminal);
+        }
+
+        if (dto.getIdConductor() != null) {
+            Empleado conductor = empleadoService.findEntityById(dto.getIdConductor());
+            ordenTrabajo.setConductor(conductor);
+        }
+
+        if (dto.getIdJefeTurnoPatio() != null) {
+            Empleado jefeTurnoPatio = empleadoService.findEntityById(dto.getIdJefeTurnoPatio());
+            ordenTrabajo.setJefeTurnoPatio(jefeTurnoPatio);
+        }
+
+        if (dto.getIdJefeTurnoMant() != null) {
+            Empleado jefeTurnoMant = empleadoService.findEntityById(dto.getIdJefeTurnoMant());
+            ordenTrabajo.setJefeTurnoMant(jefeTurnoMant);
+        }
+
+        if (dto.getIdSupervCalidad() != null) {
+            Empleado supervCalidad = empleadoService.findEntityById(dto.getIdSupervCalidad());
+            ordenTrabajo.setSupervCalidad(supervCalidad);
         }
 
         return ordenTrabajoRepository.save(ordenTrabajo);
@@ -117,8 +137,9 @@ public class OrdenTrabajoService {
         if (dto.getPpu() != null) {
             ordenTrabajo.setPpu(dto.getPpu());
         }
-        if (dto.getConductor() != null) {
-            ordenTrabajo.setConductor(dto.getConductor());
+        if (dto.getIdConductor() != null) {
+            Empleado conductor = empleadoService.findEntityById(dto.getIdConductor());
+            ordenTrabajo.setConductor(conductor);
         }
         if (dto.getFechaHoraIngreso() != null) {
             ordenTrabajo.setFechaHoraIngreso(dto.getFechaHoraIngreso());
@@ -135,20 +156,23 @@ public class OrdenTrabajoService {
         if (dto.getObsTrabElectrico() != null) {
             ordenTrabajo.setObsTrabElectrico(dto.getObsTrabElectrico());
         }
-        if (dto.getJefeTurnoPatio() != null) {
-            ordenTrabajo.setJefeTurnoPatio(dto.getJefeTurnoPatio());
+        if (dto.getIdJefeTurnoPatio() != null) {
+            Empleado jefeTurnoPatio = empleadoService.findEntityById(dto.getIdJefeTurnoPatio());
+            ordenTrabajo.setJefeTurnoPatio(jefeTurnoPatio);
         }
         if (dto.getHoraJefeTurnoPatio() != null) {
             ordenTrabajo.setHoraJefeTurnoPatio(dto.getHoraJefeTurnoPatio());
         }
-        if (dto.getJefeTurnoMant() != null) {
-            ordenTrabajo.setJefeTurnoMant(dto.getJefeTurnoMant());
+        if (dto.getIdJefeTurnoMant() != null) {
+            Empleado jefeTurnoMant = empleadoService.findEntityById(dto.getIdJefeTurnoMant());
+            ordenTrabajo.setJefeTurnoMant(jefeTurnoMant);
         }
         if (dto.getHoraJefeTurnoMant() != null) {
             ordenTrabajo.setHoraJefeTurnoMant(dto.getHoraJefeTurnoMant());
         }
-        if (dto.getSupervCalidad() != null) {
-            ordenTrabajo.setSupervCalidad(dto.getSupervCalidad());
+        if (dto.getIdSupervCalidad() != null) {
+            Empleado supervCalidad = empleadoService.findEntityById(dto.getIdSupervCalidad());
+            ordenTrabajo.setSupervCalidad(supervCalidad);
         }
         if (dto.getHoraSupervCalidad() != null) {
             ordenTrabajo.setHoraSupervCalidad(dto.getHoraSupervCalidad());

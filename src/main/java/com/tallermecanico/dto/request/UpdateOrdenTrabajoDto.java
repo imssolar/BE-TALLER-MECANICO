@@ -22,8 +22,7 @@ public class UpdateOrdenTrabajoDto {
     @Size(max = 8, message = "La PPU no puede exceder los 8 caracteres")
     private String ppu;
 
-    @Size(max = 30, message = "El conductor no puede exceder los 30 caracteres")
-    private String conductor;
+    private Integer idConductor;
 
     private LocalDateTime fechaHoraIngreso;
 
@@ -38,18 +37,15 @@ public class UpdateOrdenTrabajoDto {
     @Size(max = 500, message = "Las observaciones de trabajo eléctrico no pueden exceder los 500 caracteres")
     private String obsTrabElectrico;
 
-    @Size(max = 50, message = "El jefe de turno patio no puede exceder los 50 caracteres")
-    private String jefeTurnoPatio;
+    private Integer idJefeTurnoPatio;
 
     private LocalDateTime horaJefeTurnoPatio;
 
-    @Size(max = 50, message = "El jefe de turno mantención no puede exceder los 50 caracteres")
-    private String jefeTurnoMant;
+    private Integer idJefeTurnoMant;
 
     private LocalDateTime horaJefeTurnoMant;
 
-    @Size(max = 50, message = "El supervisor de calidad no puede exceder los 50 caracteres")
-    private String supervCalidad;
+    private Integer idSupervCalidad;
 
     private LocalDateTime horaSupervCalidad;
 
@@ -121,12 +117,12 @@ public class UpdateOrdenTrabajoDto {
         this.ppu = ppu;
     }
 
-    public String getConductor() {
-        return conductor;
+    public Integer getIdConductor() {
+        return idConductor;
     }
 
-    public void setConductor(String conductor) {
-        this.conductor = conductor;
+    public void setIdConductor(Integer idConductor) {
+        this.idConductor = idConductor;
     }
 
     public LocalDateTime getFechaHoraIngreso() {
@@ -169,12 +165,12 @@ public class UpdateOrdenTrabajoDto {
         this.obsTrabElectrico = obsTrabElectrico;
     }
 
-    public String getJefeTurnoPatio() {
-        return jefeTurnoPatio;
+    public Integer getIdJefeTurnoPatio() {
+        return idJefeTurnoPatio;
     }
 
-    public void setJefeTurnoPatio(String jefeTurnoPatio) {
-        this.jefeTurnoPatio = jefeTurnoPatio;
+    public void setIdJefeTurnoPatio(Integer idJefeTurnoPatio) {
+        this.idJefeTurnoPatio = idJefeTurnoPatio;
     }
 
     public LocalDateTime getHoraJefeTurnoPatio() {
@@ -185,12 +181,12 @@ public class UpdateOrdenTrabajoDto {
         this.horaJefeTurnoPatio = horaJefeTurnoPatio;
     }
 
-    public String getJefeTurnoMant() {
-        return jefeTurnoMant;
+    public Integer getIdJefeTurnoMant() {
+        return idJefeTurnoMant;
     }
 
-    public void setJefeTurnoMant(String jefeTurnoMant) {
-        this.jefeTurnoMant = jefeTurnoMant;
+    public void setIdJefeTurnoMant(Integer idJefeTurnoMant) {
+        this.idJefeTurnoMant = idJefeTurnoMant;
     }
 
     public LocalDateTime getHoraJefeTurnoMant() {
@@ -201,12 +197,12 @@ public class UpdateOrdenTrabajoDto {
         this.horaJefeTurnoMant = horaJefeTurnoMant;
     }
 
-    public String getSupervCalidad() {
-        return supervCalidad;
+    public Integer getIdSupervCalidad() {
+        return idSupervCalidad;
     }
 
-    public void setSupervCalidad(String supervCalidad) {
-        this.supervCalidad = supervCalidad;
+    public void setIdSupervCalidad(Integer idSupervCalidad) {
+        this.idSupervCalidad = idSupervCalidad;
     }
 
     public LocalDateTime getHoraSupervCalidad() {

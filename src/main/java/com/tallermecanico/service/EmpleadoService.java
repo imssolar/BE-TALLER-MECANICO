@@ -115,24 +115,22 @@ public class EmpleadoService {
     }
 
     @Transactional(readOnly = true)
-    public List<EmpleadoResponseDto> findConductores() {
-        return empleadoRepository.findByCargoAndActivo(CargoEmpleado.CONDUCTOR, true).stream()
-                .map(this::toResponseDto)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<EmpleadoResponseDto> findMecanicos() {
-        return empleadoRepository.findByCargoAndActivo(CargoEmpleado.MECANICO, true).stream()
+    public List<EmpleadoResponseDto> findByCargo(CargoEmpleado cargo) {
+        return empleadoRepository.findByCargoAndActivo( cargo, true).stream()
                 .map(this::toResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public EmpleadoResponseDto findById(Integer id) {
-        Empleado empleado = empleadoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Empleado", "id", id));
+        Empleado empleado = findEntityById(id);
         return toResponseDto(empleado);
+    }
+
+    @Transactional(readOnly = true)
+    public Empleado findEntityById(Integer id) {
+        return empleadoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Empleado", "id", id));
     }
 
     @Transactional(readOnly = true)
