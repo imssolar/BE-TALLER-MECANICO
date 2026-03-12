@@ -1,8 +1,15 @@
 package com.tallermecanico.service;
 
-import com.tallermecanico.config.RoleConfig;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -10,12 +17,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.tallermecanico.config.RoleConfig;
 
 @Service
 public class JwtTokenGenerator {
@@ -24,10 +26,12 @@ public class JwtTokenGenerator {
 
     private final JwtEncoder jwtEncoder;
     private final RoleConfig roleConfig;
+    private final long accessTokenExpiryMinutes;
 
-    public JwtTokenGenerator(JwtEncoder jwtEncoder, RoleConfig roleConfig) {
+    public JwtTokenGenerator(JwtEncoder jwtEncoder, RoleConfig roleConfig, @Value("${jwt.access-token-expiry-minutes}") long accessTokenExpiryMinutes) {
         this.jwtEncoder = jwtEncoder;
         this.roleConfig = roleConfig;
+        this.accessTokenExpiryMinutes = accessTokenExpiryMinutes;
     }
 
     public String generateAccessToken(Authentication authentication) {
@@ -39,7 +43,7 @@ public class JwtTokenGenerator {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("taller-mecanico")
                 .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
+                .expiresAt(Instant.now().plus(accessTokenExpiryMinutes, ChronoUnit.MINUTES))
                 .subject(authentication.getName())
                 .claim("scope", permissions)
                 .build();
