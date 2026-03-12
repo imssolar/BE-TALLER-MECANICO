@@ -1,18 +1,20 @@
 package com.tallermecanico.controller;
 
-import com.tallermecanico.dto.request.SignUpRequestDto;
-import com.tallermecanico.dto.response.AuthResponseDto;
-import com.tallermecanico.service.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.tallermecanico.dto.request.SignUpRequestDto;
+import com.tallermecanico.dto.response.AuthResponseDto;
+import com.tallermecanico.service.AuthService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,9 +27,9 @@ public class AuthController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<AuthResponseDto> signIn(Authentication authentication) {
-        AuthResponseDto response = authService.authenticate(authentication);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<AuthResponseDto> signIn(Authentication authentication, HttpServletResponse response) {
+        AuthResponseDto authResponse = authService.authenticate(authentication, response);
+        return ResponseEntity.ok(authResponse);
     }
 
     @PostMapping("/sign-up")
@@ -36,7 +38,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_REFRESH_TOKEN')")
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponseDto> refreshToken(HttpServletRequest request) {
         AuthResponseDto response = authService.refreshToken(request);

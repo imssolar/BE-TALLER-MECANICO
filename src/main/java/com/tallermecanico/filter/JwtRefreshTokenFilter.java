@@ -9,7 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
+import jakarta.servlet.http.Cookie;
+import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -34,7 +35,7 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public JwtRefreshTokenFilter(RSAKeyRecord rsaKeyRecord, JwtTokenUtils jwtTokenUtils,
-                                 RefreshTokenRepository refreshTokenRepository) {
+            RefreshTokenRepository refreshTokenRepository) {
         this.rsaKeyRecord = rsaKeyRecord;
         this.jwtTokenUtils = jwtTokenUtils;
         this.refreshTokenRepository = refreshTokenRepository;
@@ -42,18 +43,25 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
         try {
             log.info("[JwtRefreshTokenFilter:doFilterInternal] Filtering request: {}", request.getRequestURI());
 
-            final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            Cookie[] cookies = request.getCookies();
+            if (cookies == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            final String token = authHeader.substring(7);
+            String token = Arrays.stream(cookies)
+                    .filter(c -> "refresh_token".equals(c.getName()))
+                    .findFirst()
+                    .map(Cookie::getValue)
+                    .orElse(null);
+            if (token == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             JwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeyRecord.rsaPublicKey()).build();
             final Jwt jwtRefreshToken = jwtDecoder.decode(token);
             final String userName = jwtTokenUtils.getUserName(jwtRefreshToken);
@@ -71,8 +79,7 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken createdToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
-                            userDetails.getAuthorities()
-                    );
+                            userDetails.getAuthorities());
                     createdToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     securityContext.setAuthentication(createdToken);
                     SecurityContextHolder.setContext(securityContext);

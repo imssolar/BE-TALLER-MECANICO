@@ -1,17 +1,10 @@
 package com.tallermecanico.service;
 
-import com.tallermecanico.dto.request.SignUpRequestDto;
-import com.tallermecanico.dto.response.AuthResponseDto;
-import com.tallermecanico.entity.RefreshToken;
-import com.tallermecanico.entity.User;
-import com.tallermecanico.enums.TokenType;
-import com.tallermecanico.exception.DuplicateResourceException;
-import com.tallermecanico.repository.RefreshTokenRepository;
-import com.tallermecanico.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +14,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
+import com.tallermecanico.dto.request.SignUpRequestDto;
+import com.tallermecanico.dto.response.AuthResponseDto;
+import com.tallermecanico.entity.RefreshToken;
+import com.tallermecanico.entity.User;
+import com.tallermecanico.enums.TokenType;
+import com.tallermecanico.exception.DuplicateResourceException;
+import com.tallermecanico.repository.RefreshTokenRepository;
+import com.tallermecanico.repository.UserRepository;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class AuthService {
@@ -32,19 +36,22 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final PasswordEncoder passwordEncoder;
+    private final long accessTokenExpiryMinutes;
 
     public AuthService(UserRepository userRepository,
-                       RefreshTokenRepository refreshTokenRepository,
-                       JwtTokenGenerator jwtTokenGenerator,
-                       PasswordEncoder passwordEncoder) {
+            RefreshTokenRepository refreshTokenRepository,
+            JwtTokenGenerator jwtTokenGenerator,
+            PasswordEncoder passwordEncoder,
+            @Value("${jwt.access-token-expiry-minutes}") long accessTokenExpiryMinutes) {
         this.userRepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.jwtTokenGenerator = jwtTokenGenerator;
         this.passwordEncoder = passwordEncoder;
+        this.accessTokenExpiryMinutes = accessTokenExpiryMinutes;
     }
 
     @Transactional
-    public AuthResponseDto authenticate(Authentication authentication) {
+    public AuthResponseDto authenticate(Authentication authentication, HttpServletResponse httpServletResponse) {
         try {
             var user = userRepository.findByUsername(authentication.getName())
                     .orElseThrow(() -> {
@@ -61,9 +68,14 @@ public class AuthService {
 
             AuthResponseDto response = new AuthResponseDto();
             response.setAccessToken(accessToken);
-            response.setAccessTokenExpiry(15 * 60);
+            response.setAccessTokenExpiry((int) accessTokenExpiryMinutes * 60);
             response.setUserName(user.getUsername());
             response.setTokenType(TokenType.Bearer);
+            Cookie refreshCookie = new Cookie("refresh_token", refreshToken);
+            refreshCookie.setHttpOnly(true);
+            refreshCookie.setPath("/api/auth/refresh-token");
+            refreshCookie.setMaxAge(24 * 60 * 60);
+            httpServletResponse.addCookie(refreshCookie);
             return response;
 
         } catch (Exception e) {
@@ -74,17 +86,22 @@ public class AuthService {
 
     @Transactional
     public AuthResponseDto refreshToken(HttpServletRequest request) {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token no encontrado");
 
-        if (authHeader == null || !authHeader.startsWith(TokenType.Bearer.name())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de token inválido");
         }
-
-        final String refreshToken = authHeader.substring(7);
+        String refreshToken = Arrays.stream(cookies)
+                .filter(c -> "refresh_token".equals(c.getName()))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token no encontrado"));
+       
 
         var refreshTokenEntity = refreshTokenRepository.findByRefreshToken(refreshToken)
                 .filter(token -> !token.getRevoked())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token revocado o inválido"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                        "Refresh token revocado o inválido"));
 
         User user = refreshTokenEntity.getUser();
 
@@ -96,7 +113,7 @@ public class AuthService {
 
         AuthResponseDto response = new AuthResponseDto();
         response.setAccessToken(newAccessToken);
-        response.setAccessTokenExpiry(15 * 60);
+        response.setAccessTokenExpiry((int) accessTokenExpiryMinutes * 60);
         response.setUserName(user.getUsername());
         response.setTokenType(TokenType.Bearer);
         return response;
@@ -129,7 +146,7 @@ public class AuthService {
 
         AuthResponseDto response = new AuthResponseDto();
         response.setAccessToken(accessToken);
-        response.setAccessTokenExpiry(15 * 60);
+        response.setAccessTokenExpiry((int) accessTokenExpiryMinutes * 60);
         response.setUserName(savedUser.getUsername());
         response.setTokenType(TokenType.Bearer);
         return response;
