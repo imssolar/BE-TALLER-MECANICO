@@ -30,8 +30,9 @@ public class TorreControl {
     @Column(name = "nro_ot_manager")
     private Long nroOtManager;
 
-    @Column(length = 50)
-    private String electrico;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_electrico")
+    private Empleado electrico;
 
     @Column(name = "fecha_hora_inicio_electrico")
     private LocalDateTime fechaHoraInicioElectrico;
@@ -39,8 +40,9 @@ public class TorreControl {
     @Column(name = "fecha_hora_fin_electrico")
     private LocalDateTime fechaHoraFinElectrico;
 
-    @Column(length = 50)
-    private String mecanico;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_mecanico")
+    private Empleado mecanico;
 
     @Column(name = "fecha_hora_inicio_mecanico")
     private LocalDateTime fechaHoraInicioMecanico;
@@ -133,11 +135,11 @@ public class TorreControl {
         this.nroOtManager = nroOtManager;
     }
 
-    public String getElectrico() {
+    public Empleado getElectrico() {
         return electrico;
     }
 
-    public void setElectrico(String electrico) {
+    public void setElectrico(Empleado electrico) {
         this.electrico = electrico;
     }
 
@@ -157,11 +159,11 @@ public class TorreControl {
         this.fechaHoraFinElectrico = fechaHoraFinElectrico;
     }
 
-    public String getMecanico() {
+    public Empleado getMecanico() {
         return mecanico;
     }
 
-    public void setMecanico(String mecanico) {
+    public void setMecanico(Empleado mecanico) {
         this.mecanico = mecanico;
     }
 

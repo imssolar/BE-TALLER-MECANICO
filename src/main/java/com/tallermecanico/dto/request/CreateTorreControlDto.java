@@ -22,15 +22,13 @@ public class CreateTorreControlDto {
 
     private Long nroOtManager;
 
-    @Size(max = 50, message = "El electrico no debe exceder los 50 caracteres")
-    private String electrico;
+    private Integer idEmpleadoElectrico;
 
     private LocalDateTime fechaHoraInicioElectrico;
 
     private LocalDateTime fechaHoraFinElectrico;
 
-    @Size(max = 50, message = "El mecanico no debe exceder los 50 caracteres")
-    private String mecanico;
+    private Integer idEmpleadoMecanico;
 
     private LocalDateTime fechaHoraInicioMecanico;
 
@@ -112,12 +110,12 @@ public class CreateTorreControlDto {
         this.nroOtManager = nroOtManager;
     }
 
-    public String getElectrico() {
-        return electrico;
+    public Integer getIdEmpleadoElectrico() {
+        return idEmpleadoElectrico;
     }
 
-    public void setElectrico(String electrico) {
-        this.electrico = electrico;
+    public void setIdEmpleadoElectrico(Integer idEmpleadoElectrico) {
+        this.idEmpleadoElectrico = idEmpleadoElectrico;
     }
 
     public LocalDateTime getFechaHoraInicioElectrico() {
@@ -136,12 +134,12 @@ public class CreateTorreControlDto {
         this.fechaHoraFinElectrico = fechaHoraFinElectrico;
     }
 
-    public String getMecanico() {
-        return mecanico;
+    public Integer getIdEmpleadoMecanico() {
+        return idEmpleadoMecanico;
     }
 
-    public void setMecanico(String mecanico) {
-        this.mecanico = mecanico;
+    public void setIdEmpleadoMecanico(Integer idEmpleadoMecanico) {
+        this.idEmpleadoMecanico = idEmpleadoMecanico;
     }
 
     public LocalDateTime getFechaHoraInicioMecanico() {

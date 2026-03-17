@@ -3,7 +3,7 @@ package com.tallermecanico.controller;
 import com.tallermecanico.dto.request.CreateTorreControlDto;
 import com.tallermecanico.dto.request.UpdateTorreControlDto;
 import com.tallermecanico.dto.response.DeleteTorreControlResponseDto;
-import com.tallermecanico.entity.TorreControl;
+import com.tallermecanico.dto.response.TorreControlResponseDto;
 import com.tallermecanico.service.TorreControlService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,45 +23,45 @@ public class TorreControlController {
     }
 
     @PostMapping
-    public ResponseEntity<TorreControl> create(@Valid @RequestBody CreateTorreControlDto dto) {
-        TorreControl torreControl = torreControlService.create(dto);
+    public ResponseEntity<TorreControlResponseDto> create(@Valid @RequestBody CreateTorreControlDto dto) {
+        TorreControlResponseDto torreControl = torreControlService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(torreControl);
     }
 
     @GetMapping
-    public ResponseEntity<List<TorreControl>> findAll() {
-        List<TorreControl> registros = torreControlService.findAll();
+    public ResponseEntity<List<TorreControlResponseDto>> findAll() {
+        List<TorreControlResponseDto> registros = torreControlService.findAll();
         return ResponseEntity.ok(registros);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TorreControl> findById(@PathVariable Integer id) {
-        TorreControl torreControl = torreControlService.findById(id);
+    public ResponseEntity<TorreControlResponseDto> findById(@PathVariable Integer id) {
+        TorreControlResponseDto torreControl = torreControlService.findById(id);
         return ResponseEntity.ok(torreControl);
     }
 
     @GetMapping("/bus/{idBus}")
-    public ResponseEntity<List<TorreControl>> findByBus(@PathVariable Integer idBus) {
-        List<TorreControl> registros = torreControlService.findByBus(idBus);
+    public ResponseEntity<List<TorreControlResponseDto>> findByBus(@PathVariable Integer idBus) {
+        List<TorreControlResponseDto> registros = torreControlService.findByBus(idBus);
         return ResponseEntity.ok(registros);
     }
 
     @GetMapping("/abiertos")
-    public ResponseEntity<List<TorreControl>> findAbiertos() {
-        List<TorreControl> registros = torreControlService.findAbiertos();
+    public ResponseEntity<List<TorreControlResponseDto>> findAbiertos() {
+        List<TorreControlResponseDto> registros = torreControlService.findAbiertos();
         return ResponseEntity.ok(registros);
     }
 
     @GetMapping("/cerrados")
-    public ResponseEntity<List<TorreControl>> findCerrados() {
-        List<TorreControl> registros = torreControlService.findCerrados();
+    public ResponseEntity<List<TorreControlResponseDto>> findCerrados() {
+        List<TorreControlResponseDto> registros = torreControlService.findCerrados();
         return ResponseEntity.ok(registros);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TorreControl> update(@PathVariable Integer id,
-                                                @Valid @RequestBody UpdateTorreControlDto dto) {
-        TorreControl torreControl = torreControlService.update(id, dto);
+    public ResponseEntity<TorreControlResponseDto> update(@PathVariable Integer id,
+                                                          @Valid @RequestBody UpdateTorreControlDto dto) {
+        TorreControlResponseDto torreControl = torreControlService.update(id, dto);
         return ResponseEntity.ok(torreControl);
     }
 
