@@ -3,9 +3,12 @@ package com.tallermecanico.service;
 import com.tallermecanico.dto.request.CreateTorreControlDto;
 import com.tallermecanico.dto.request.UpdateTorreControlDto;
 import com.tallermecanico.dto.response.DeleteTorreControlResponseDto;
+import com.tallermecanico.dto.response.TorreControlResponseDto;
 import com.tallermecanico.entity.Bus;
+import com.tallermecanico.entity.Empleado;
 import com.tallermecanico.entity.TorreControl;
 import com.tallermecanico.exception.ResourceNotFoundException;
+import com.tallermecanico.repository.EmpleadoRepository;
 import com.tallermecanico.repository.TorreControlRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,20 +20,33 @@ public class TorreControlService {
 
     private final TorreControlRepository torreControlRepository;
     private final BusService busService;
+    private final EmpleadoRepository empleadoRepository;
 
     public TorreControlService(TorreControlRepository torreControlRepository,
-                               BusService busService) {
+                               BusService busService,
+                               EmpleadoRepository empleadoRepository) {
         this.torreControlRepository = torreControlRepository;
         this.busService = busService;
+        this.empleadoRepository = empleadoRepository;
     }
 
     @Transactional
-    public TorreControl create(CreateTorreControlDto dto) {
+    public TorreControlResponseDto create(CreateTorreControlDto dto) {
         TorreControl torreControl = new TorreControl();
 
         if (dto.getIdBus() != null) {
             Bus bus = busService.findById(dto.getIdBus());
             torreControl.setBus(bus);
+        }
+        if (dto.getIdEmpleadoMecanico() != null) {
+            Empleado mecanico = empleadoRepository.findById(dto.getIdEmpleadoMecanico())
+                    .orElseThrow(() -> new ResourceNotFoundException("Empleado", "id", dto.getIdEmpleadoMecanico()));
+            torreControl.setMecanico(mecanico);
+        }
+        if (dto.getIdEmpleadoElectrico() != null) {
+            Empleado electrico = empleadoRepository.findById(dto.getIdEmpleadoElectrico())
+                    .orElseThrow(() -> new ResourceNotFoundException("Empleado", "id", dto.getIdEmpleadoElectrico()));
+            torreControl.setElectrico(electrico);
         }
 
         torreControl.setKm(dto.getKm());
@@ -38,10 +54,8 @@ public class TorreControlService {
         torreControl.setFalla(dto.getFalla());
         torreControl.setTipoFalla(dto.getTipoFalla());
         torreControl.setNroOtManager(dto.getNroOtManager());
-        torreControl.setElectrico(dto.getElectrico());
         torreControl.setFechaHoraInicioElectrico(dto.getFechaHoraInicioElectrico());
         torreControl.setFechaHoraFinElectrico(dto.getFechaHoraFinElectrico());
-        torreControl.setMecanico(dto.getMecanico());
         torreControl.setFechaHoraInicioMecanico(dto.getFechaHoraInicioMecanico());
         torreControl.setFechaHoraFinMecanico(dto.getFechaHoraFinMecanico());
         torreControl.setStatus(dto.getStatus());
@@ -53,43 +67,67 @@ public class TorreControlService {
         torreControl.setCerrado(dto.getCerrado());
         torreControl.setTipoEmergencia(dto.getTipoEmergencia());
 
-        return torreControlRepository.save(torreControl);
+        TorreControl saved = torreControlRepository.save(torreControl);
+        return toDto(saved);
     }
 
     @Transactional(readOnly = true)
-    public List<TorreControl> findAll() {
-        return torreControlRepository.findAll();
+    public List<TorreControlResponseDto> findAll() {
+        return torreControlRepository.findAllWithRelations()
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public TorreControl findById(Integer id) {
-        return torreControlRepository.findById(id)
+    public TorreControlResponseDto findById(Integer id) {
+        TorreControl torreControl = torreControlRepository.findByIdWithRelations(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TorreControl", "id", id));
+        return toDto(torreControl);
     }
 
     @Transactional(readOnly = true)
-    public List<TorreControl> findByBus(Integer idBus) {
-        return torreControlRepository.findByBus_IdBus(idBus);
+    public List<TorreControlResponseDto> findByBus(Integer idBus) {
+        return torreControlRepository.findByBusWithRelations(idBus)
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<TorreControl> findAbiertos() {
-        return torreControlRepository.findByCerrado(false);
+    public List<TorreControlResponseDto> findAbiertos() {
+        return torreControlRepository.findByCerradoWithRelations(false)
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<TorreControl> findCerrados() {
-        return torreControlRepository.findByCerrado(true);
+    public List<TorreControlResponseDto> findCerrados() {
+        return torreControlRepository.findByCerradoWithRelations(true)
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional
-    public TorreControl update(Integer id, UpdateTorreControlDto dto) {
-        TorreControl torreControl = torreControlRepository.findById(id)
+    public TorreControlResponseDto update(Integer id, UpdateTorreControlDto dto) {
+        TorreControl torreControl = torreControlRepository.findByIdWithRelations(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TorreControl", "id", id));
 
         if (dto.getIdBus() != null) {
             Bus bus = busService.findById(dto.getIdBus());
             torreControl.setBus(bus);
+        }
+        if (dto.getIdEmpleadoMecanico() != null) {
+            Empleado mecanico = empleadoRepository.findById(dto.getIdEmpleadoMecanico())
+                    .orElseThrow(() -> new ResourceNotFoundException("Empleado", "id", dto.getIdEmpleadoMecanico()));
+            torreControl.setMecanico(mecanico);
+        }
+        if (dto.getIdEmpleadoElectrico() != null) {
+            Empleado electrico = empleadoRepository.findById(dto.getIdEmpleadoElectrico())
+                    .orElseThrow(() -> new ResourceNotFoundException("Empleado", "id", dto.getIdEmpleadoElectrico()));
+            torreControl.setElectrico(electrico);
         }
         if (dto.getKm() != null) {
             torreControl.setKm(dto.getKm());
@@ -106,17 +144,11 @@ public class TorreControlService {
         if (dto.getNroOtManager() != null) {
             torreControl.setNroOtManager(dto.getNroOtManager());
         }
-        if (dto.getElectrico() != null) {
-            torreControl.setElectrico(dto.getElectrico());
-        }
         if (dto.getFechaHoraInicioElectrico() != null) {
             torreControl.setFechaHoraInicioElectrico(dto.getFechaHoraInicioElectrico());
         }
         if (dto.getFechaHoraFinElectrico() != null) {
             torreControl.setFechaHoraFinElectrico(dto.getFechaHoraFinElectrico());
-        }
-        if (dto.getMecanico() != null) {
-            torreControl.setMecanico(dto.getMecanico());
         }
         if (dto.getFechaHoraInicioMecanico() != null) {
             torreControl.setFechaHoraInicioMecanico(dto.getFechaHoraInicioMecanico());
@@ -149,7 +181,7 @@ public class TorreControlService {
             torreControl.setTipoEmergencia(dto.getTipoEmergencia());
         }
 
-        return torreControlRepository.save(torreControl);
+        return toDto(torreControlRepository.save(torreControl));
     }
 
     @Transactional
@@ -162,5 +194,35 @@ public class TorreControlService {
                 torreControl.getId(),
                 "Torre de control eliminada exitosamente"
         );
+    }
+
+    private TorreControlResponseDto toDto(TorreControl t) {
+        TorreControlResponseDto dto = new TorreControlResponseDto();
+        dto.setId(t.getId());
+        if (t.getBus() != null) {
+            dto.setIdBus(t.getBus().getIdBus());
+            dto.setPatenteB(t.getBus().getPatenteB());
+        }
+        if (t.getMecanico() != null) {
+            dto.setIdEmpleadoMecanico(t.getMecanico().getId());
+            dto.setNombreCompletoMecanico(
+                t.getMecanico().getNombres() + " " +
+                t.getMecanico().getApellidoPaterno() + " " +
+                t.getMecanico().getApellidoMaterno()
+            );
+        }
+        if (t.getElectrico() != null) {
+            dto.setIdEmpleadoElectrico(t.getElectrico().getId());
+            dto.setNombreCompletoElectrico(
+                t.getElectrico().getNombres() + " " +
+                t.getElectrico().getApellidoPaterno() + " " +
+                t.getElectrico().getApellidoMaterno()
+            );
+        }
+        dto.setFalla(t.getFalla());
+        dto.setTipoFalla(t.getTipoFalla());
+        dto.setStatus(t.getStatus());
+        dto.setCerrado(t.getCerrado());
+        return dto;
     }
 }
