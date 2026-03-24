@@ -26,8 +26,7 @@ public class UpdateCofpatioDto {
 
     private Boolean combustible;
 
-    @Size(max = 80, message = "El conductor no debe exceder los 80 caracteres")
-    private String conductor;
+    private Integer idEmpleadoConductor;
 
     @Size(max = 50, message = "La falla no debe exceder los 50 caracteres")
     private String falla;
@@ -48,8 +47,7 @@ public class UpdateCofpatioDto {
 
     private Boolean operativaTerreno;
 
-    @Size(max = 50, message = "El mecanico no debe exceder los 50 caracteres")
-    private String mecanico;
+    private Integer idEmpleadoMecanico;
 
     private Boolean grua;
 
@@ -57,8 +55,7 @@ public class UpdateCofpatioDto {
 
     private LocalDateTime tiempoDetencion;
 
-    @Size(max = 25, message = "El responsable no debe exceder los 25 caracteres")
-    private String responsable;
+    private Integer idEmpleadoResponsable;
 
     @Min(value = 0, message = "El aceite motor no puede ser negativo")
     private Integer aceiteMotor;
@@ -75,8 +72,7 @@ public class UpdateCofpatioDto {
     @Min(value = 0, message = "El codigo panne no puede ser negativo")
     private Integer codigoPanne;
 
-    @Size(max = 50, message = "El responsable cierre no debe exceder los 50 caracteres")
-    private String responsableCierre;
+    private Integer idEmpleadoResponsableCierre;
 
     private Long idIntranet;
 
@@ -158,12 +154,12 @@ public class UpdateCofpatioDto {
         this.combustible = combustible;
     }
 
-    public String getConductor() {
-        return conductor;
+    public Integer getIdEmpleadoConductor() {
+        return idEmpleadoConductor;
     }
 
-    public void setConductor(String conductor) {
-        this.conductor = conductor;
+    public void setIdEmpleadoConductor(Integer idEmpleadoConductor) {
+        this.idEmpleadoConductor = idEmpleadoConductor;
     }
 
     public String getFalla() {
@@ -222,12 +218,12 @@ public class UpdateCofpatioDto {
         this.operativaTerreno = operativaTerreno;
     }
 
-    public String getMecanico() {
-        return mecanico;
+    public Integer getIdEmpleadoMecanico() {
+        return idEmpleadoMecanico;
     }
 
-    public void setMecanico(String mecanico) {
-        this.mecanico = mecanico;
+    public void setIdEmpleadoMecanico(Integer idEmpleadoMecanico) {
+        this.idEmpleadoMecanico = idEmpleadoMecanico;
     }
 
     public Boolean getGrua() {
@@ -254,12 +250,12 @@ public class UpdateCofpatioDto {
         this.tiempoDetencion = tiempoDetencion;
     }
 
-    public String getResponsable() {
-        return responsable;
+    public Integer getIdEmpleadoResponsable() {
+        return idEmpleadoResponsable;
     }
 
-    public void setResponsable(String responsable) {
-        this.responsable = responsable;
+    public void setIdEmpleadoResponsable(Integer idEmpleadoResponsable) {
+        this.idEmpleadoResponsable = idEmpleadoResponsable;
     }
 
     public Integer getAceiteMotor() {
@@ -302,12 +298,12 @@ public class UpdateCofpatioDto {
         this.codigoPanne = codigoPanne;
     }
 
-    public String getResponsableCierre() {
-        return responsableCierre;
+    public Integer getIdEmpleadoResponsableCierre() {
+        return idEmpleadoResponsableCierre;
     }
 
-    public void setResponsableCierre(String responsableCierre) {
-        this.responsableCierre = responsableCierre;
+    public void setIdEmpleadoResponsableCierre(Integer idEmpleadoResponsableCierre) {
+        this.idEmpleadoResponsableCierre = idEmpleadoResponsableCierre;
     }
 
     public Long getIdIntranet() {
