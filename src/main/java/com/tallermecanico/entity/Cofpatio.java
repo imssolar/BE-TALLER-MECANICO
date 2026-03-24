@@ -1,7 +1,16 @@
 package com.tallermecanico.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "cofpatio")
@@ -14,6 +23,22 @@ public class Cofpatio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_bus")
     private Bus bus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_mecanico")
+    private Empleado mecanico;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_conductor")
+    private Empleado conductor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_responsable")
+    private Empleado responsable;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_responsable_cierre")
+    private Empleado responsableCierre;
 
     @Column
     private Integer km;
@@ -36,9 +61,6 @@ public class Cofpatio {
     @Column
     private Boolean combustible;
 
-    @Column(length = 80)
-    private String conductor;
-
     @Column(length = 50)
     private String falla;
 
@@ -60,9 +82,6 @@ public class Cofpatio {
     @Column(name = "operativa_terreno")
     private Boolean operativaTerreno;
 
-    @Column(length = 50)
-    private String mecanico;
-
     @Column
     private Boolean grua;
 
@@ -71,9 +90,6 @@ public class Cofpatio {
 
     @Column(name = "tiempo_detencion")
     private LocalDateTime tiempoDetencion;
-
-    @Column(length = 25)
-    private String responsable;
 
     @Column(name = "aceite_motor")
     private Integer aceiteMotor;
@@ -89,9 +105,6 @@ public class Cofpatio {
 
     @Column(name = "codigo_panne")
     private Integer codigoPanne;
-
-    @Column(name = "responsable_cierre", length = 50)
-    private String responsableCierre;
 
     @Column(name = "id_intranet")
     private Long idIntranet;
@@ -182,14 +195,6 @@ public class Cofpatio {
         this.combustible = combustible;
     }
 
-    public String getConductor() {
-        return conductor;
-    }
-
-    public void setConductor(String conductor) {
-        this.conductor = conductor;
-    }
-
     public String getFalla() {
         return falla;
     }
@@ -246,14 +251,6 @@ public class Cofpatio {
         this.operativaTerreno = operativaTerreno;
     }
 
-    public String getMecanico() {
-        return mecanico;
-    }
-
-    public void setMecanico(String mecanico) {
-        this.mecanico = mecanico;
-    }
-
     public Boolean getGrua() {
         return grua;
     }
@@ -276,14 +273,6 @@ public class Cofpatio {
 
     public void setTiempoDetencion(LocalDateTime tiempoDetencion) {
         this.tiempoDetencion = tiempoDetencion;
-    }
-
-    public String getResponsable() {
-        return responsable;
-    }
-
-    public void setResponsable(String responsable) {
-        this.responsable = responsable;
     }
 
     public Integer getAceiteMotor() {
@@ -326,14 +315,6 @@ public class Cofpatio {
         this.codigoPanne = codigoPanne;
     }
 
-    public String getResponsableCierre() {
-        return responsableCierre;
-    }
-
-    public void setResponsableCierre(String responsableCierre) {
-        this.responsableCierre = responsableCierre;
-    }
-
     public Long getIdIntranet() {
         return idIntranet;
     }
@@ -365,4 +346,38 @@ public class Cofpatio {
     public void setTipoFalla(String tipoFalla) {
         this.tipoFalla = tipoFalla;
     }
+
+    public Empleado getMecanico() {
+        return mecanico;
+    }
+
+    public void setMecanico(Empleado mecanico) {
+        this.mecanico = mecanico;
+    }
+
+    public Empleado getConductor() {
+        return conductor;
+    }
+
+    public void setConductor(Empleado conductor) {
+        this.conductor = conductor;
+    }
+
+    public Empleado getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(Empleado responsable) {
+        this.responsable = responsable;
+    }
+
+    public Empleado getResponsableCierre() {
+        return responsableCierre;
+    }
+
+    public void setResponsableCierre(Empleado responsableCierre) {
+        this.responsableCierre = responsableCierre;
+    }
+
+    
 }
