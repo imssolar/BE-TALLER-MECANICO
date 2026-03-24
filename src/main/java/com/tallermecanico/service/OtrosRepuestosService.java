@@ -33,7 +33,7 @@ public class OtrosRepuestosService {
         OtrosRepuestos otrosRepuestos = new OtrosRepuestos();
 
         if (dto.getIdOrdenTrabajo() != null) {
-            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findById(dto.getIdOrdenTrabajo());
+            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findEntityById(dto.getIdOrdenTrabajo());
             otrosRepuestos.setOrdenTrabajo(ordenTrabajo);
         }
 
@@ -73,7 +73,7 @@ public class OtrosRepuestosService {
                 .orElseThrow(() -> new ResourceNotFoundException("OtrosRepuestos", "id", id));
 
         if (dto.getIdOrdenTrabajo() != null) {
-            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findById(dto.getIdOrdenTrabajo());
+            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findEntityById(dto.getIdOrdenTrabajo());
             otrosRepuestos.setOrdenTrabajo(ordenTrabajo);
         }
         if (dto.getIdGlosa() != null) {

@@ -41,17 +41,17 @@ public class RepuestoOTService {
         RepuestoOT repuestoOT = new RepuestoOT();
 
         if (dto.getIdOrdenTrabajo() != null) {
-            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findById(dto.getIdOrdenTrabajo());
+            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findEntityById(dto.getIdOrdenTrabajo());
             repuestoOT.setOrdenTrabajo(ordenTrabajo);
         }
 
         if (dto.getIdOrdenTrabajoProg() != null) {
-            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findById(dto.getIdOrdenTrabajoProg());
+            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findEntityById(dto.getIdOrdenTrabajoProg());
             repuestoOT.setOrdenTrabajoProg(ordenTrabajoProg);
         }
 
         if (dto.getIdOrdenTrabajoMovil() != null) {
-            OrdenTrabajoMovil ordenTrabajoMovil = ordenTrabajoMovilService.findById(dto.getIdOrdenTrabajoMovil());
+            OrdenTrabajoMovil ordenTrabajoMovil = ordenTrabajoMovilService.findEntityById(dto.getIdOrdenTrabajoMovil());
             repuestoOT.setOrdenTrabajoMovil(ordenTrabajoMovil);
         }
 
@@ -100,15 +100,15 @@ public class RepuestoOTService {
                 .orElseThrow(() -> new ResourceNotFoundException("RepuestoOT", "id", id));
 
         if (dto.getIdOrdenTrabajo() != null) {
-            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findById(dto.getIdOrdenTrabajo());
+            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findEntityById(dto.getIdOrdenTrabajo());
             repuestoOT.setOrdenTrabajo(ordenTrabajo);
         }
         if (dto.getIdOrdenTrabajoProg() != null) {
-            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findById(dto.getIdOrdenTrabajoProg());
+            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findEntityById(dto.getIdOrdenTrabajoProg());
             repuestoOT.setOrdenTrabajoProg(ordenTrabajoProg);
         }
         if (dto.getIdOrdenTrabajoMovil() != null) {
-            OrdenTrabajoMovil ordenTrabajoMovil = ordenTrabajoMovilService.findById(dto.getIdOrdenTrabajoMovil());
+            OrdenTrabajoMovil ordenTrabajoMovil = ordenTrabajoMovilService.findEntityById(dto.getIdOrdenTrabajoMovil());
             repuestoOT.setOrdenTrabajoMovil(ordenTrabajoMovil);
         }
         if (dto.getIdGlosa() != null) {

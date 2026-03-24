@@ -33,12 +33,12 @@ public class OTTecnicoService {
         OTTecnico tecnico = new OTTecnico();
 
         if (dto.getIdOrdenTrabajo() != null) {
-            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findById(dto.getIdOrdenTrabajo());
+            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findEntityById(dto.getIdOrdenTrabajo());
             tecnico.setOrdenTrabajo(ordenTrabajo);
         }
 
         if (dto.getIdOrdenTrabajoProg() != null) {
-            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findById(dto.getIdOrdenTrabajoProg());
+            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findEntityById(dto.getIdOrdenTrabajoProg());
             tecnico.setOrdenTrabajoProg(ordenTrabajoProg);
         }
 
@@ -78,11 +78,11 @@ public class OTTecnicoService {
                 .orElseThrow(() -> new ResourceNotFoundException("OTTecnico", "id", id));
 
         if (dto.getIdOrdenTrabajo() != null) {
-            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findById(dto.getIdOrdenTrabajo());
+            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findEntityById(dto.getIdOrdenTrabajo());
             tecnico.setOrdenTrabajo(ordenTrabajo);
         }
         if (dto.getIdOrdenTrabajoProg() != null) {
-            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findById(dto.getIdOrdenTrabajoProg());
+            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findEntityById(dto.getIdOrdenTrabajoProg());
             tecnico.setOrdenTrabajoProg(ordenTrabajoProg);
         }
         if (dto.getNombre() != null) {
