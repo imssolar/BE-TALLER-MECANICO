@@ -24,8 +24,7 @@ public class CreateOrdenTrabajoMovilDto {
     @Size(max = 8, message = "La PPU no debe exceder los 8 caracteres")
     private String ppu;
 
-    @Size(max = 30, message = "El conductor no debe exceder los 30 caracteres")
-    private String conductor;
+    private Integer idConductor;
 
     private LocalDateTime fechaHoraIngreso;
 
@@ -37,18 +36,15 @@ public class CreateOrdenTrabajoMovilDto {
     @Size(max = 150, message = "La observacion de recepcion no debe exceder los 150 caracteres")
     private String obsRecepcion;
 
-    @Size(max = 50, message = "El responsable no debe exceder los 50 caracteres")
-    private String responsable;
+    private Integer idResponsable;
 
     private LocalDateTime horaResponsable;
 
-    @Size(max = 50, message = "El responsable tecnico no debe exceder los 50 caracteres")
-    private String respTecnico;
+    private Integer idRespTecnico;
 
     private LocalDateTime horaTecnico;
 
-    @Size(max = 50, message = "El responsable que recepciona no debe exceder los 50 caracteres")
-    private String respRecepciona;
+    private Integer idRespRecepciona;
 
     private LocalDateTime horaRecepcion;
 
@@ -128,12 +124,12 @@ public class CreateOrdenTrabajoMovilDto {
         this.ppu = ppu;
     }
 
-    public String getConductor() {
-        return conductor;
+    public Integer getIdConductor() {
+        return idConductor;
     }
 
-    public void setConductor(String conductor) {
-        this.conductor = conductor;
+    public void setIdConductor(Integer idConductor) {
+        this.idConductor = idConductor;
     }
 
     public LocalDateTime getFechaHoraIngreso() {
@@ -168,12 +164,12 @@ public class CreateOrdenTrabajoMovilDto {
         this.obsRecepcion = obsRecepcion;
     }
 
-    public String getResponsable() {
-        return responsable;
+    public Integer getIdResponsable() {
+        return idResponsable;
     }
 
-    public void setResponsable(String responsable) {
-        this.responsable = responsable;
+    public void setIdResponsable(Integer idResponsable) {
+        this.idResponsable = idResponsable;
     }
 
     public LocalDateTime getHoraResponsable() {
@@ -184,12 +180,12 @@ public class CreateOrdenTrabajoMovilDto {
         this.horaResponsable = horaResponsable;
     }
 
-    public String getRespTecnico() {
-        return respTecnico;
+    public Integer getIdRespTecnico() {
+        return idRespTecnico;
     }
 
-    public void setRespTecnico(String respTecnico) {
-        this.respTecnico = respTecnico;
+    public void setIdRespTecnico(Integer idRespTecnico) {
+        this.idRespTecnico = idRespTecnico;
     }
 
     public LocalDateTime getHoraTecnico() {
@@ -200,12 +196,12 @@ public class CreateOrdenTrabajoMovilDto {
         this.horaTecnico = horaTecnico;
     }
 
-    public String getRespRecepciona() {
-        return respRecepciona;
+    public Integer getIdRespRecepciona() {
+        return idRespRecepciona;
     }
 
-    public void setRespRecepciona(String respRecepciona) {
-        this.respRecepciona = respRecepciona;
+    public void setIdRespRecepciona(Integer idRespRecepciona) {
+        this.idRespRecepciona = idRespRecepciona;
     }
 
     public LocalDateTime getHoraRecepcion() {
