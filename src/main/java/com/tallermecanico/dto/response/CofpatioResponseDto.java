@@ -1,128 +1,48 @@
-package com.tallermecanico.entity;
+package com.tallermecanico.dto.response;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "cofpatio")
-public class Cofpatio {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CofpatioResponseDto {
     private Integer id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_bus")
-    private Bus bus;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_empleado_mecanico")
-    private Empleado mecanico;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_empleado_conductor")
-    private Empleado conductor;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_empleado_responsable")
-    private Empleado responsable;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_empleado_responsable_cierre")
-    private Empleado responsableCierre;
-
-    @Column
+    private Integer idBus;
+    private String patenteB;
     private Integer km;
-
-    @Column(name = "fecha_hora")
     private LocalDateTime fechaHora;
-
-    @Column(name = "fecha_hora_operativa")
     private LocalDateTime fechaHoraOperativa;
-
-    @Column(name = "lugar_panne", length = 10)
     private String lugarPanne;
-
-    @Column(name = "cof_patio", length = 5)
     private String cofPatio;
-
-    @Column(name = "nro_cp", length = 5)
     private String nroCp;
-
-    @Column
     private Boolean combustible;
-
-    @Column(length = 50)
+    private Integer idEmpleadoConductor;
+    private String nombreCompletoConductor;
     private String falla;
-
-    @Column(length = 50)
     private String ubicacion;
-
-    @Column(length = 50)
     private String cabezal;
-
-    @Column(name = "hora_real")
     private LocalDateTime horaReal;
-
-    @Column(name = "trabajo_terreno", length = 300)
     private String trabajoTerreno;
-
-    @Column(name = "obs_terreno", length = 300)
     private String obsTerreno;
-
-    @Column(name = "operativa_terreno")
     private Boolean operativaTerreno;
-
-    @Column
+    private Integer idEmpleadoMecanico;
+    private String nombreCompletoMecanico;
     private Boolean grua;
-
-    @Column(name = "hora_levantamiento")
     private LocalDateTime horaLevantamiento;
-
-    @Column(name = "tiempo_detencion")
     private LocalDateTime tiempoDetencion;
-
-    @Column(name = "aceite_motor")
+    private Integer idEmpleadoResponsable;
+    private String nombreCompletoResponsable;
     private Integer aceiteMotor;
-
-    @Column(name = "aceite_trans")
     private Integer aceiteTrans;
-
-    @Column(name = "aceite_dir")
     private Integer aceiteDir;
-
-    @Column
     private Integer refrigerante;
-
-    @Column(name = "codigo_panne")
     private Integer codigoPanne;
-
-    @Column(name = "id_intranet")
+    private Integer idEmpleadoResponsableCierre;
+    private String nombreCompletoResponsableCierre;
     private Long idIntranet;
-
-    @Column(name = "ubicacion2", length = 15)
     private String ubicacion2;
-
-    @Column(name = "ubicacion_terreno", length = 50)
     private String ubicacionTerreno;
-
-    @Column(name = "tipo_falla", length = 50)
     private String tipoFalla;
 
-    // Constructors
-    public Cofpatio() {
-    }
+    public CofpatioResponseDto() {}
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -131,12 +51,20 @@ public class Cofpatio {
         this.id = id;
     }
 
-    public Bus getBus() {
-        return bus;
+    public Integer getIdBus() {
+        return idBus;
     }
 
-    public void setBus(Bus bus) {
-        this.bus = bus;
+    public void setIdBus(Integer idBus) {
+        this.idBus = idBus;
+    }
+
+    public String getPatenteB() {
+        return patenteB;
+    }
+
+    public void setPatenteB(String patenteB) {
+        this.patenteB = patenteB;
     }
 
     public Integer getKm() {
@@ -195,6 +123,22 @@ public class Cofpatio {
         this.combustible = combustible;
     }
 
+    public Integer getIdEmpleadoConductor() {
+        return idEmpleadoConductor;
+    }
+
+    public void setIdEmpleadoConductor(Integer idEmpleadoConductor) {
+        this.idEmpleadoConductor = idEmpleadoConductor;
+    }
+
+    public String getNombreCompletoConductor() {
+        return nombreCompletoConductor;
+    }
+
+    public void setNombreCompletoConductor(String nombreCompletoConductor) {
+        this.nombreCompletoConductor = nombreCompletoConductor;
+    }
+
     public String getFalla() {
         return falla;
     }
@@ -251,6 +195,22 @@ public class Cofpatio {
         this.operativaTerreno = operativaTerreno;
     }
 
+    public Integer getIdEmpleadoMecanico() {
+        return idEmpleadoMecanico;
+    }
+
+    public void setIdEmpleadoMecanico(Integer idEmpleadoMecanico) {
+        this.idEmpleadoMecanico = idEmpleadoMecanico;
+    }
+
+    public String getNombreCompletoMecanico() {
+        return nombreCompletoMecanico;
+    }
+
+    public void setNombreCompletoMecanico(String nombreCompletoMecanico) {
+        this.nombreCompletoMecanico = nombreCompletoMecanico;
+    }
+
     public Boolean getGrua() {
         return grua;
     }
@@ -273,6 +233,22 @@ public class Cofpatio {
 
     public void setTiempoDetencion(LocalDateTime tiempoDetencion) {
         this.tiempoDetencion = tiempoDetencion;
+    }
+
+    public Integer getIdEmpleadoResponsable() {
+        return idEmpleadoResponsable;
+    }
+
+    public void setIdEmpleadoResponsable(Integer idEmpleadoResponsable) {
+        this.idEmpleadoResponsable = idEmpleadoResponsable;
+    }
+
+    public String getNombreCompletoResponsable() {
+        return nombreCompletoResponsable;
+    }
+
+    public void setNombreCompletoResponsable(String nombreCompletoResponsable) {
+        this.nombreCompletoResponsable = nombreCompletoResponsable;
     }
 
     public Integer getAceiteMotor() {
@@ -315,6 +291,22 @@ public class Cofpatio {
         this.codigoPanne = codigoPanne;
     }
 
+    public Integer getIdEmpleadoResponsableCierre() {
+        return idEmpleadoResponsableCierre;
+    }
+
+    public void setIdEmpleadoResponsableCierre(Integer idEmpleadoResponsableCierre) {
+        this.idEmpleadoResponsableCierre = idEmpleadoResponsableCierre;
+    }
+
+    public String getNombreCompletoResponsableCierre() {
+        return nombreCompletoResponsableCierre;
+    }
+
+    public void setNombreCompletoResponsableCierre(String nombreCompletoResponsableCierre) {
+        this.nombreCompletoResponsableCierre = nombreCompletoResponsableCierre;
+    }
+
     public Long getIdIntranet() {
         return idIntranet;
     }
@@ -346,38 +338,5 @@ public class Cofpatio {
     public void setTipoFalla(String tipoFalla) {
         this.tipoFalla = tipoFalla;
     }
-
-    public Empleado getMecanico() {
-        return mecanico;
-    }
-
-    public void setMecanico(Empleado mecanico) {
-        this.mecanico = mecanico;
-    }
-
-    public Empleado getConductor() {
-        return conductor;
-    }
-
-    public void setConductor(Empleado conductor) {
-        this.conductor = conductor;
-    }
-
-    public Empleado getResponsable() {
-        return responsable;
-    }
-
-    public void setResponsable(Empleado responsable) {
-        this.responsable = responsable;
-    }
-
-    public Empleado getResponsableCierre() {
-        return responsableCierre;
-    }
-
-    public void setResponsableCierre(Empleado responsableCierre) {
-        this.responsableCierre = responsableCierre;
-    }
-
     
 }

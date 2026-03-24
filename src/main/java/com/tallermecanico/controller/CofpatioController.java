@@ -2,8 +2,8 @@ package com.tallermecanico.controller;
 
 import com.tallermecanico.dto.request.CreateCofpatioDto;
 import com.tallermecanico.dto.request.UpdateCofpatioDto;
+import com.tallermecanico.dto.response.CofpatioResponseDto;
 import com.tallermecanico.dto.response.DeleteCofpatioResponseDto;
-import com.tallermecanico.entity.Cofpatio;
 import com.tallermecanico.service.CofpatioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,39 +23,33 @@ public class CofpatioController {
     }
 
     @PostMapping
-    public ResponseEntity<Cofpatio> create(@Valid @RequestBody CreateCofpatioDto dto) {
-        Cofpatio cofpatio = cofpatioService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cofpatio);
+    public ResponseEntity<CofpatioResponseDto> create(@Valid @RequestBody CreateCofpatioDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(cofpatioService.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<Cofpatio>> findAll() {
-        List<Cofpatio> cofpatios = cofpatioService.findAll();
-        return ResponseEntity.ok(cofpatios);
+    public ResponseEntity<List<CofpatioResponseDto>> findAll() {
+        return ResponseEntity.ok(cofpatioService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cofpatio> findById(@PathVariable Integer id) {
-        Cofpatio cofpatio = cofpatioService.findById(id);
-        return ResponseEntity.ok(cofpatio);
+    public ResponseEntity<CofpatioResponseDto> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(cofpatioService.findById(id));
     }
 
     @GetMapping("/bus/{idBus}")
-    public ResponseEntity<List<Cofpatio>> findByBus(@PathVariable Integer idBus) {
-        List<Cofpatio> cofpatios = cofpatioService.findByBus(idBus);
-        return ResponseEntity.ok(cofpatios);
+    public ResponseEntity<List<CofpatioResponseDto>> findByBus(@PathVariable Integer idBus) {
+        return ResponseEntity.ok(cofpatioService.findByBus(idBus));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Cofpatio> update(@PathVariable Integer id,
-                                           @Valid @RequestBody UpdateCofpatioDto dto) {
-        Cofpatio cofpatio = cofpatioService.update(id, dto);
-        return ResponseEntity.ok(cofpatio);
+    public ResponseEntity<CofpatioResponseDto> update(@PathVariable Integer id,
+                                                      @Valid @RequestBody UpdateCofpatioDto dto) {
+        return ResponseEntity.ok(cofpatioService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteCofpatioResponseDto> delete(@PathVariable Integer id) {
-        DeleteCofpatioResponseDto response = cofpatioService.delete(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(cofpatioService.delete(id));
     }
 }
