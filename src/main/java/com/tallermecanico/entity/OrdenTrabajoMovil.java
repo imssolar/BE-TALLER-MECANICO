@@ -1,7 +1,7 @@
 package com.tallermecanico.entity;
 
 import jakarta.persistence.*;
-
+import com.tallermecanico.entity.Empleado;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,8 +31,9 @@ public class OrdenTrabajoMovil {
     @Column(length = 8)
     private String ppu;
 
-    @Column(length = 30)
-    private String conductor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_conductor")
+    private Empleado conductor;
 
     @Column(name = "fecha_hora_ingreso")
     private LocalDateTime fechaHoraIngreso;
@@ -46,20 +47,23 @@ public class OrdenTrabajoMovil {
     @Column(name = "obs_recepcion", length = 150)
     private String obsRecepcion;
 
-    @Column(length = 50)
-    private String responsable;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_responsable")
+    private Empleado responsable;
 
     @Column(name = "hora_responsable")
     private LocalDateTime horaResponsable;
 
-    @Column(name = "resp_tecnico", length = 50)
-    private String respTecnico;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_resp_tecnico")
+    private Empleado respTecnico;
 
     @Column(name = "hora_tecnico")
     private LocalDateTime horaTecnico;
 
-    @Column(name = "resp_recepciona", length = 50)
-    private String respRecepciona;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_resp_recepciona")
+    private Empleado respRecepciona;
 
     @Column(name = "hora_recepcion")
     private LocalDateTime horaRecepcion;
@@ -140,11 +144,11 @@ public class OrdenTrabajoMovil {
         this.ppu = ppu;
     }
 
-    public String getConductor() {
+    public Empleado getConductor() {
         return conductor;
     }
 
-    public void setConductor(String conductor) {
+    public void setConductor(Empleado conductor) {
         this.conductor = conductor;
     }
 
@@ -180,11 +184,11 @@ public class OrdenTrabajoMovil {
         this.obsRecepcion = obsRecepcion;
     }
 
-    public String getResponsable() {
+    public Empleado getResponsable() {
         return responsable;
     }
 
-    public void setResponsable(String responsable) {
+    public void setResponsable(Empleado responsable) {
         this.responsable = responsable;
     }
 
@@ -196,11 +200,11 @@ public class OrdenTrabajoMovil {
         this.horaResponsable = horaResponsable;
     }
 
-    public String getRespTecnico() {
+    public Empleado getRespTecnico() {
         return respTecnico;
     }
 
-    public void setRespTecnico(String respTecnico) {
+    public void setRespTecnico(Empleado respTecnico) {
         this.respTecnico = respTecnico;
     }
 
@@ -212,11 +216,11 @@ public class OrdenTrabajoMovil {
         this.horaTecnico = horaTecnico;
     }
 
-    public String getRespRecepciona() {
+    public Empleado getRespRecepciona() {
         return respRecepciona;
     }
 
-    public void setRespRecepciona(String respRecepciona) {
+    public void setRespRecepciona(Empleado respRecepciona) {
         this.respRecepciona = respRecepciona;
     }
 
