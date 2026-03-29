@@ -6,6 +6,7 @@ public class OrdenTrabajoResponseDto {
 
     private Integer id;
     private Integer idTerminal;
+    private String nombreTerminal;
     private String tipoOt;
     private Long nroOtManager;
     private Integer idBus;
@@ -41,6 +42,9 @@ public class OrdenTrabajoResponseDto {
 
     public Integer getIdTerminal() { return idTerminal; }
     public void setIdTerminal(Integer idTerminal) { this.idTerminal = idTerminal; }
+
+    public String getNombreTerminal() { return nombreTerminal; }
+    public void setNombreTerminal(String nombreTerminal) { this.nombreTerminal = nombreTerminal; }
 
     public String getTipoOt() { return tipoOt; }
     public void setTipoOt(String tipoOt) { this.tipoOt = tipoOt; }
