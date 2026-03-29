@@ -29,7 +29,7 @@ public class DetalleOTTEXTService {
         DetalleOTTEXT detalle = new DetalleOTTEXT();
 
         if (dto.getIdOtTallerExt() != null) {
-            OTTallerExt otTallerExt = otTallerExtService.findById(dto.getIdOtTallerExt());
+            OTTallerExt otTallerExt = otTallerExtService.findEntityById(dto.getIdOtTallerExt());
             detalle.setOtTallerExt(otTallerExt);
         }
 
@@ -63,7 +63,7 @@ public class DetalleOTTEXTService {
                 .orElseThrow(() -> new ResourceNotFoundException("DetalleOTTEXT", "id", id));
 
         if (dto.getIdOtTallerExt() != null) {
-            OTTallerExt otTallerExt = otTallerExtService.findById(dto.getIdOtTallerExt());
+            OTTallerExt otTallerExt = otTallerExtService.findEntityById(dto.getIdOtTallerExt());
             detalle.setOtTallerExt(otTallerExt);
         }
         if (dto.getCantidad() != null) {

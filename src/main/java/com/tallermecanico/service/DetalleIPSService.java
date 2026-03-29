@@ -33,12 +33,12 @@ public class DetalleIPSService {
         DetalleIPS detalleIPS = new DetalleIPS();
 
         if (dto.getIdOrdenTrabajoProg() != null) {
-            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findById(dto.getIdOrdenTrabajoProg());
+            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findEntityById(dto.getIdOrdenTrabajoProg());
             detalleIPS.setOrdenTrabajoProg(ordenTrabajoProg);
         }
 
         if (dto.getIdOrdenTrabajoMovil() != null) {
-            OrdenTrabajoMovil ordenTrabajoMovil = ordenTrabajoMovilService.findById(dto.getIdOrdenTrabajoMovil());
+            OrdenTrabajoMovil ordenTrabajoMovil = ordenTrabajoMovilService.findEntityById(dto.getIdOrdenTrabajoMovil());
             detalleIPS.setOrdenTrabajoMovil(ordenTrabajoMovil);
         }
 
@@ -75,11 +75,11 @@ public class DetalleIPSService {
                 .orElseThrow(() -> new ResourceNotFoundException("DetalleIPS", "id", id));
 
         if (dto.getIdOrdenTrabajoProg() != null) {
-            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findById(dto.getIdOrdenTrabajoProg());
+            OrdenTrabajoProg ordenTrabajoProg = ordenTrabajoProgService.findEntityById(dto.getIdOrdenTrabajoProg());
             detalleIPS.setOrdenTrabajoProg(ordenTrabajoProg);
         }
         if (dto.getIdOrdenTrabajoMovil() != null) {
-            OrdenTrabajoMovil ordenTrabajoMovil = ordenTrabajoMovilService.findById(dto.getIdOrdenTrabajoMovil());
+            OrdenTrabajoMovil ordenTrabajoMovil = ordenTrabajoMovilService.findEntityById(dto.getIdOrdenTrabajoMovil());
             detalleIPS.setOrdenTrabajoMovil(ordenTrabajoMovil);
         }
         if (dto.getIdIps() != null) {

@@ -31,7 +31,7 @@ public class DetalleMTTOTService {
         detalle.setLitrosMtt(dto.getLitrosMtt());
 
         if (dto.getIdOrdenTrabajo() != null) {
-            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findById(dto.getIdOrdenTrabajo());
+            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findEntityById(dto.getIdOrdenTrabajo());
             detalle.setOrdenTrabajo(ordenTrabajo);
         }
 
@@ -60,7 +60,7 @@ public class DetalleMTTOTService {
                 .orElseThrow(() -> new ResourceNotFoundException("DetalleMTTOT", "id", id));
 
         if (dto.getIdOrdenTrabajo() != null) {
-            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findById(dto.getIdOrdenTrabajo());
+            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findEntityById(dto.getIdOrdenTrabajo());
             detalle.setOrdenTrabajo(ordenTrabajo);
         }
         if (dto.getIdMtt() != null) {

@@ -12,7 +12,7 @@ public class OrdenTrabajo {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_terminal")
+    @JoinColumn(name = "id_terminal", nullable = false)
     private Terminal terminal;
 
     @Column(name = "tipo_ot", length = 20)

@@ -3,6 +3,7 @@ package com.tallermecanico.service;
 import com.tallermecanico.dto.request.CreateOrdenTrabajoDto;
 import com.tallermecanico.dto.request.UpdateOrdenTrabajoDto;
 import com.tallermecanico.dto.response.DeleteOrdenTrabajoResponseDto;
+import com.tallermecanico.dto.response.OrdenTrabajoResponseDto;
 import com.tallermecanico.entity.Bus;
 import com.tallermecanico.entity.Empleado;
 import com.tallermecanico.entity.OrdenTrabajo;
@@ -34,7 +35,7 @@ public class OrdenTrabajoService {
     }
 
     @Transactional
-    public OrdenTrabajo create(CreateOrdenTrabajoDto dto) {
+    public OrdenTrabajoResponseDto create(CreateOrdenTrabajoDto dto) {
         if (ordenTrabajoRepository.existsById(dto.getId())) {
             throw new DuplicateResourceException("OrdenTrabajo", "id", dto.getId());
         }
@@ -63,67 +64,70 @@ public class OrdenTrabajoService {
             Bus bus = busService.findById(dto.getIdBus());
             ordenTrabajo.setBus(bus);
         }
-
         if (dto.getIdTerminal() != null) {
             Terminal terminal = terminalService.findById(dto.getIdTerminal());
             ordenTrabajo.setTerminal(terminal);
         }
-
         if (dto.getIdConductor() != null) {
             Empleado conductor = empleadoService.findEntityById(dto.getIdConductor());
             ordenTrabajo.setConductor(conductor);
         }
-
         if (dto.getIdJefeTurnoPatio() != null) {
             Empleado jefeTurnoPatio = empleadoService.findEntityById(dto.getIdJefeTurnoPatio());
             ordenTrabajo.setJefeTurnoPatio(jefeTurnoPatio);
         }
-
         if (dto.getIdJefeTurnoMant() != null) {
             Empleado jefeTurnoMant = empleadoService.findEntityById(dto.getIdJefeTurnoMant());
             ordenTrabajo.setJefeTurnoMant(jefeTurnoMant);
         }
-
         if (dto.getIdSupervCalidad() != null) {
             Empleado supervCalidad = empleadoService.findEntityById(dto.getIdSupervCalidad());
             ordenTrabajo.setSupervCalidad(supervCalidad);
         }
 
-        return ordenTrabajoRepository.save(ordenTrabajo);
+        return toDto(ordenTrabajoRepository.save(ordenTrabajo));
     }
 
     @Transactional(readOnly = true)
-    public List<OrdenTrabajo> findAll() {
-        return ordenTrabajoRepository.findAll();
+    public List<OrdenTrabajoResponseDto> findAll() {
+        return ordenTrabajoRepository.findAllWithRelations()
+                .stream().map(this::toDto).toList();
     }
 
     @Transactional(readOnly = true)
-    public OrdenTrabajo findById(Integer id) {
+    public OrdenTrabajoResponseDto findById(Integer id) {
+        return toDto(ordenTrabajoRepository.findByIdWithRelations(id)
+                .orElseThrow(() -> new ResourceNotFoundException("OrdenTrabajo", "id", id)));
+    }
+
+    @Transactional(readOnly = true)
+    public OrdenTrabajo findEntityById(Integer id) {
         return ordenTrabajoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OrdenTrabajo", "id", id));
     }
 
     @Transactional(readOnly = true)
-    public List<OrdenTrabajo> findByBus(Integer idBus) {
-        return ordenTrabajoRepository.findByBus_IdBus(idBus);
+    public List<OrdenTrabajoResponseDto> findByBus(Integer idBus) {
+        return ordenTrabajoRepository.findByBusWithRelations(idBus)
+                .stream().map(this::toDto).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<OrdenTrabajo> findByTerminal(Integer idTerminal) {
-        return ordenTrabajoRepository.findByTerminal_IdTerminal(idTerminal);
+    public List<OrdenTrabajoResponseDto> findByTerminal(Integer idTerminal) {
+        return ordenTrabajoRepository.findByTerminalWithRelations(idTerminal)
+                .stream().map(this::toDto).toList();
     }
 
     @Transactional
-    public OrdenTrabajo update(Integer id, UpdateOrdenTrabajoDto dto) {
-        OrdenTrabajo ordenTrabajo = findById(id);
+    public OrdenTrabajoResponseDto update(Integer id, UpdateOrdenTrabajoDto dto) {
+        OrdenTrabajo ordenTrabajo = ordenTrabajoRepository.findByIdWithRelations(id)
+                .orElseThrow(() -> new ResourceNotFoundException("OrdenTrabajo", "id", id));
 
         if (dto.getIdBus() != null) {
-            Bus bus = busService.findById(dto.getIdBus());
-            ordenTrabajo.setBus(bus);
+            ordenTrabajo.setBus(busService.findById(dto.getIdBus()));
         }
         if (dto.getIdTerminal() != null) {
-            Terminal terminal = terminalService.findById(dto.getIdTerminal());
-            ordenTrabajo.setTerminal(terminal);
+            ordenTrabajo.setTerminal(terminalService.findById(dto.getIdTerminal()));
         }
         if (dto.getTipoOt() != null) {
             ordenTrabajo.setTipoOt(dto.getTipoOt());
@@ -138,8 +142,7 @@ public class OrdenTrabajoService {
             ordenTrabajo.setPpu(dto.getPpu());
         }
         if (dto.getIdConductor() != null) {
-            Empleado conductor = empleadoService.findEntityById(dto.getIdConductor());
-            ordenTrabajo.setConductor(conductor);
+            ordenTrabajo.setConductor(empleadoService.findEntityById(dto.getIdConductor()));
         }
         if (dto.getFechaHoraIngreso() != null) {
             ordenTrabajo.setFechaHoraIngreso(dto.getFechaHoraIngreso());
@@ -157,22 +160,19 @@ public class OrdenTrabajoService {
             ordenTrabajo.setObsTrabElectrico(dto.getObsTrabElectrico());
         }
         if (dto.getIdJefeTurnoPatio() != null) {
-            Empleado jefeTurnoPatio = empleadoService.findEntityById(dto.getIdJefeTurnoPatio());
-            ordenTrabajo.setJefeTurnoPatio(jefeTurnoPatio);
+            ordenTrabajo.setJefeTurnoPatio(empleadoService.findEntityById(dto.getIdJefeTurnoPatio()));
         }
         if (dto.getHoraJefeTurnoPatio() != null) {
             ordenTrabajo.setHoraJefeTurnoPatio(dto.getHoraJefeTurnoPatio());
         }
         if (dto.getIdJefeTurnoMant() != null) {
-            Empleado jefeTurnoMant = empleadoService.findEntityById(dto.getIdJefeTurnoMant());
-            ordenTrabajo.setJefeTurnoMant(jefeTurnoMant);
+            ordenTrabajo.setJefeTurnoMant(empleadoService.findEntityById(dto.getIdJefeTurnoMant()));
         }
         if (dto.getHoraJefeTurnoMant() != null) {
             ordenTrabajo.setHoraJefeTurnoMant(dto.getHoraJefeTurnoMant());
         }
         if (dto.getIdSupervCalidad() != null) {
-            Empleado supervCalidad = empleadoService.findEntityById(dto.getIdSupervCalidad());
-            ordenTrabajo.setSupervCalidad(supervCalidad);
+            ordenTrabajo.setSupervCalidad(empleadoService.findEntityById(dto.getIdSupervCalidad()));
         }
         if (dto.getHoraSupervCalidad() != null) {
             ordenTrabajo.setHoraSupervCalidad(dto.getHoraSupervCalidad());
@@ -193,13 +193,59 @@ public class OrdenTrabajoService {
             ordenTrabajo.setItemFalla(dto.getItemFalla());
         }
 
-        return ordenTrabajoRepository.save(ordenTrabajo);
+        return toDto(ordenTrabajoRepository.save(ordenTrabajo));
     }
 
     @Transactional
     public DeleteOrdenTrabajoResponseDto delete(Integer id) {
-        OrdenTrabajo ordenTrabajo = findById(id);
+        OrdenTrabajo ordenTrabajo = ordenTrabajoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("OrdenTrabajo", "id", id));
         ordenTrabajoRepository.delete(ordenTrabajo);
         return new DeleteOrdenTrabajoResponseDto(id, "Orden de trabajo eliminada exitosamente");
+    }
+
+    private OrdenTrabajoResponseDto toDto(OrdenTrabajo o) {
+        OrdenTrabajoResponseDto dto = new OrdenTrabajoResponseDto();
+        dto.setId(o.getId());
+        if (o.getBus() != null) {
+            dto.setIdBus(o.getBus().getIdBus());
+            dto.setPatenteB(o.getBus().getPatenteB());
+        }
+        dto.setIdTerminal(o.getTerminal().getIdTerminal());
+        dto.setNombreTerminal(o.getTerminal().getTerminal());
+        if (o.getConductor() != null) {
+            dto.setIdConductor(o.getConductor().getId());
+            dto.setNombreCompletoConductor(o.getConductor().getNombres() + " " + o.getConductor().getApellidoPaterno() + " " + o.getConductor().getApellidoMaterno());
+        }
+        if (o.getJefeTurnoPatio() != null) {
+            dto.setIdJefeTurnoPatio(o.getJefeTurnoPatio().getId());
+            dto.setNombreCompletoJefeTurnoPatio(o.getJefeTurnoPatio().getNombres() + " " + o.getJefeTurnoPatio().getApellidoPaterno() + " " + o.getJefeTurnoPatio().getApellidoMaterno());
+        }
+        if (o.getJefeTurnoMant() != null) {
+            dto.setIdJefeTurnoMant(o.getJefeTurnoMant().getId());
+            dto.setNombreCompletoJefeTurnoMant(o.getJefeTurnoMant().getNombres() + " " + o.getJefeTurnoMant().getApellidoPaterno() + " " + o.getJefeTurnoMant().getApellidoMaterno());
+        }
+        if (o.getSupervCalidad() != null) {
+            dto.setIdSupervCalidad(o.getSupervCalidad().getId());
+            dto.setNombreCompletoSupervCalidad(o.getSupervCalidad().getNombres() + " " + o.getSupervCalidad().getApellidoPaterno() + " " + o.getSupervCalidad().getApellidoMaterno());
+        }
+        dto.setTipoOt(o.getTipoOt());
+        dto.setNroOtManager(o.getNroOtManager());
+        dto.setKm(o.getKm());
+        dto.setPpu(o.getPpu());
+        dto.setFechaHoraIngreso(o.getFechaHoraIngreso());
+        dto.setFechaHoraSalida(o.getFechaHoraSalida());
+        dto.setTrabajoARealizar(o.getTrabajoARealizar());
+        dto.setObsTrabMecanico(o.getObsTrabMecanico());
+        dto.setObsTrabElectrico(o.getObsTrabElectrico());
+        dto.setHoraJefeTurnoPatio(o.getHoraJefeTurnoPatio());
+        dto.setHoraJefeTurnoMant(o.getHoraJefeTurnoMant());
+        dto.setHoraSupervCalidad(o.getHoraSupervCalidad());
+        dto.setObsControlCalidad(o.getObsControlCalidad());
+        dto.setRepAutoriza(o.getRepAutoriza());
+        dto.setRepRetira(o.getRepRetira());
+        dto.setRepBodega(o.getRepBodega());
+        dto.setItemFalla(o.getItemFalla());
+        return dto;
     }
 }

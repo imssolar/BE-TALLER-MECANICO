@@ -3,7 +3,7 @@ package com.tallermecanico.controller;
 import com.tallermecanico.dto.request.CreateOrdenTrabajoMovilDto;
 import com.tallermecanico.dto.request.UpdateOrdenTrabajoMovilDto;
 import com.tallermecanico.dto.response.DeleteOrdenTrabajoMovilResponseDto;
-import com.tallermecanico.entity.OrdenTrabajoMovil;
+import com.tallermecanico.dto.response.OrdenTrabajoMovilResponseDto;
 import com.tallermecanico.service.OrdenTrabajoMovilService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,29 +23,28 @@ public class OrdenTrabajoMovilController {
     }
 
     @PostMapping
-    public ResponseEntity<OrdenTrabajoMovil> create(@Valid @RequestBody CreateOrdenTrabajoMovilDto dto) {
-        OrdenTrabajoMovil otm = ordenTrabajoMovilService.create(dto);
-        return new ResponseEntity<>(otm, HttpStatus.CREATED);
+    public ResponseEntity<OrdenTrabajoMovilResponseDto> create(@Valid @RequestBody CreateOrdenTrabajoMovilDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ordenTrabajoMovilService.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<OrdenTrabajoMovil>> findAll() {
+    public ResponseEntity<List<OrdenTrabajoMovilResponseDto>> findAll() {
         return ResponseEntity.ok(ordenTrabajoMovilService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrdenTrabajoMovil> findById(@PathVariable Integer id) {
+    public ResponseEntity<OrdenTrabajoMovilResponseDto> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(ordenTrabajoMovilService.findById(id));
     }
 
     @GetMapping("/terminal/{idTerminal}")
-    public ResponseEntity<List<OrdenTrabajoMovil>> findByTerminal(@PathVariable Integer idTerminal) {
+    public ResponseEntity<List<OrdenTrabajoMovilResponseDto>> findByTerminal(@PathVariable Integer idTerminal) {
         return ResponseEntity.ok(ordenTrabajoMovilService.findByTerminal(idTerminal));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<OrdenTrabajoMovil> update(@PathVariable Integer id,
-                                                     @Valid @RequestBody UpdateOrdenTrabajoMovilDto dto) {
+    public ResponseEntity<OrdenTrabajoMovilResponseDto> update(@PathVariable Integer id,
+                                                               @Valid @RequestBody UpdateOrdenTrabajoMovilDto dto) {
         return ResponseEntity.ok(ordenTrabajoMovilService.update(id, dto));
     }
 

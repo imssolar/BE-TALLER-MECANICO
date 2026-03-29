@@ -3,6 +3,8 @@ package com.tallermecanico.service;
 import com.tallermecanico.dto.request.CreateOrdenTrabajoMovilDto;
 import com.tallermecanico.dto.request.UpdateOrdenTrabajoMovilDto;
 import com.tallermecanico.dto.response.DeleteOrdenTrabajoMovilResponseDto;
+import com.tallermecanico.dto.response.OrdenTrabajoMovilResponseDto;
+import com.tallermecanico.entity.Empleado;
 import com.tallermecanico.entity.OrdenTrabajoMovil;
 import com.tallermecanico.entity.Terminal;
 import com.tallermecanico.exception.DuplicateResourceException;
@@ -18,15 +20,18 @@ public class OrdenTrabajoMovilService {
 
     private final OrdenTrabajoMovilRepository ordenTrabajoMovilRepository;
     private final TerminalService terminalService;
+    private final EmpleadoService empleadoService;
 
     public OrdenTrabajoMovilService(OrdenTrabajoMovilRepository ordenTrabajoMovilRepository,
-                                    TerminalService terminalService) {
+                                    TerminalService terminalService,
+                                    EmpleadoService empleadoService) {
         this.ordenTrabajoMovilRepository = ordenTrabajoMovilRepository;
         this.terminalService = terminalService;
+        this.empleadoService = empleadoService;
     }
 
     @Transactional
-    public OrdenTrabajoMovil create(CreateOrdenTrabajoMovilDto dto) {
+    public OrdenTrabajoMovilResponseDto create(CreateOrdenTrabajoMovilDto dto) {
         if (ordenTrabajoMovilRepository.existsById(dto.getId())) {
             throw new DuplicateResourceException("OrdenTrabajoMovil", "id", dto.getId());
         }
@@ -38,16 +43,12 @@ public class OrdenTrabajoMovilService {
         otm.setNroMovil(dto.getNroMovil());
         otm.setKm(dto.getKm());
         otm.setPpu(dto.getPpu());
-        otm.setConductor(dto.getConductor());
         otm.setFechaHoraIngreso(dto.getFechaHoraIngreso());
         otm.setFechaHoraSalida(dto.getFechaHoraSalida());
         otm.setTrabajoARealizar(dto.getTrabajoARealizar());
         otm.setObsRecepcion(dto.getObsRecepcion());
-        otm.setResponsable(dto.getResponsable());
         otm.setHoraResponsable(dto.getHoraResponsable());
-        otm.setRespTecnico(dto.getRespTecnico());
         otm.setHoraTecnico(dto.getHoraTecnico());
-        otm.setRespRecepciona(dto.getRespRecepciona());
         otm.setHoraRecepcion(dto.getHoraRecepcion());
         otm.setObsTecnicas(dto.getObsTecnicas());
         otm.setAutoriza(dto.getAutoriza());
@@ -59,37 +60,60 @@ public class OrdenTrabajoMovilService {
             Terminal terminal = terminalService.findById(dto.getIdTerminal());
             otm.setTerminal(terminal);
         }
+        if (dto.getIdConductor() != null) {
+            Empleado conductor = empleadoService.findEntityById(dto.getIdConductor());
+            otm.setConductor(conductor);
+        }
+        if (dto.getIdResponsable() != null) {
+            Empleado responsable = empleadoService.findEntityById(dto.getIdResponsable());
+            otm.setResponsable(responsable);
+        }
+        if (dto.getIdRespTecnico() != null) {
+            Empleado respTecnico = empleadoService.findEntityById(dto.getIdRespTecnico());
+            otm.setRespTecnico(respTecnico);
+        }
+        if (dto.getIdRespRecepciona() != null) {
+            Empleado respRecepciona = empleadoService.findEntityById(dto.getIdRespRecepciona());
+            otm.setRespRecepciona(respRecepciona);
+        }
 
-        return ordenTrabajoMovilRepository.save(otm);
+        return toDto(ordenTrabajoMovilRepository.save(otm));
     }
 
     @Transactional(readOnly = true)
-    public List<OrdenTrabajoMovil> findAll() {
-        return ordenTrabajoMovilRepository.findAll();
+    public List<OrdenTrabajoMovilResponseDto> findAll() {
+        return ordenTrabajoMovilRepository.findAllWithRelations()
+                .stream().map(this::toDto).toList();
     }
 
     @Transactional(readOnly = true)
-    public OrdenTrabajoMovil findById(Integer id) {
+    public OrdenTrabajoMovilResponseDto findById(Integer id) {
+        return toDto(ordenTrabajoMovilRepository.findByIdWithRelations(id)
+                .orElseThrow(() -> new ResourceNotFoundException("OrdenTrabajoMovil", "id", id)));
+    }
+
+    @Transactional(readOnly = true)
+    public OrdenTrabajoMovil findEntityById(Integer id) {
         return ordenTrabajoMovilRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OrdenTrabajoMovil", "id", id));
     }
 
     @Transactional(readOnly = true)
-    public List<OrdenTrabajoMovil> findByTerminal(Integer idTerminal) {
-        return ordenTrabajoMovilRepository.findByTerminal_IdTerminal(idTerminal);
+    public List<OrdenTrabajoMovilResponseDto> findByTerminal(Integer idTerminal) {
+        return ordenTrabajoMovilRepository.findByTerminalWithRelations(idTerminal)
+                .stream().map(this::toDto).toList();
     }
 
     @Transactional
-    public OrdenTrabajoMovil update(Integer id, UpdateOrdenTrabajoMovilDto dto) {
-        OrdenTrabajoMovil otm = ordenTrabajoMovilRepository.findById(id)
+    public OrdenTrabajoMovilResponseDto update(Integer id, UpdateOrdenTrabajoMovilDto dto) {
+        OrdenTrabajoMovil otm = ordenTrabajoMovilRepository.findByIdWithRelations(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OrdenTrabajoMovil", "id", id));
 
         if (dto.getTipoOtm() != null) {
             otm.setTipoOtm(dto.getTipoOtm());
         }
         if (dto.getIdTerminal() != null) {
-            Terminal terminal = terminalService.findById(dto.getIdTerminal());
-            otm.setTerminal(terminal);
+            otm.setTerminal(terminalService.findById(dto.getIdTerminal()));
         }
         if (dto.getNroOtManager() != null) {
             otm.setNroOtManager(dto.getNroOtManager());
@@ -103,8 +127,8 @@ public class OrdenTrabajoMovilService {
         if (dto.getPpu() != null) {
             otm.setPpu(dto.getPpu());
         }
-        if (dto.getConductor() != null) {
-            otm.setConductor(dto.getConductor());
+        if (dto.getIdConductor() != null) {
+            otm.setConductor(empleadoService.findEntityById(dto.getIdConductor()));
         }
         if (dto.getFechaHoraIngreso() != null) {
             otm.setFechaHoraIngreso(dto.getFechaHoraIngreso());
@@ -118,20 +142,20 @@ public class OrdenTrabajoMovilService {
         if (dto.getObsRecepcion() != null) {
             otm.setObsRecepcion(dto.getObsRecepcion());
         }
-        if (dto.getResponsable() != null) {
-            otm.setResponsable(dto.getResponsable());
+        if (dto.getIdResponsable() != null) {
+            otm.setResponsable(empleadoService.findEntityById(dto.getIdResponsable()));
         }
         if (dto.getHoraResponsable() != null) {
             otm.setHoraResponsable(dto.getHoraResponsable());
         }
-        if (dto.getRespTecnico() != null) {
-            otm.setRespTecnico(dto.getRespTecnico());
+        if (dto.getIdRespTecnico() != null) {
+            otm.setRespTecnico(empleadoService.findEntityById(dto.getIdRespTecnico()));
         }
         if (dto.getHoraTecnico() != null) {
             otm.setHoraTecnico(dto.getHoraTecnico());
         }
-        if (dto.getRespRecepciona() != null) {
-            otm.setRespRecepciona(dto.getRespRecepciona());
+        if (dto.getIdRespRecepciona() != null) {
+            otm.setRespRecepciona(empleadoService.findEntityById(dto.getIdRespRecepciona()));
         }
         if (dto.getHoraRecepcion() != null) {
             otm.setHoraRecepcion(dto.getHoraRecepcion());
@@ -152,18 +176,56 @@ public class OrdenTrabajoMovilService {
             otm.setFormato(dto.getFormato());
         }
 
-        return ordenTrabajoMovilRepository.save(otm);
+        return toDto(ordenTrabajoMovilRepository.save(otm));
     }
 
     @Transactional
     public DeleteOrdenTrabajoMovilResponseDto delete(Integer id) {
         OrdenTrabajoMovil otm = ordenTrabajoMovilRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OrdenTrabajoMovil", "id", id));
-
         ordenTrabajoMovilRepository.delete(otm);
-        return new DeleteOrdenTrabajoMovilResponseDto(
-                otm.getId(),
-                "Orden de trabajo móvil eliminada exitosamente"
-        );
+        return new DeleteOrdenTrabajoMovilResponseDto(otm.getId(), "Orden de trabajo móvil eliminada exitosamente");
+    }
+
+    private OrdenTrabajoMovilResponseDto toDto(OrdenTrabajoMovil o) {
+        OrdenTrabajoMovilResponseDto dto = new OrdenTrabajoMovilResponseDto();
+        dto.setId(o.getId());
+        dto.setTipoOtm(o.getTipoOtm());
+        dto.setNroOtManager(o.getNroOtManager());
+        dto.setNroMovil(o.getNroMovil());
+        dto.setKm(o.getKm());
+        dto.setPpu(o.getPpu());
+        if (o.getTerminal() != null) {
+            dto.setIdTerminal(o.getTerminal().getIdTerminal());
+        }
+        if (o.getConductor() != null) {
+            dto.setIdConductor(o.getConductor().getId());
+            dto.setNombreCompletoConductor(o.getConductor().getNombres() + " " + o.getConductor().getApellidoPaterno() + " " + o.getConductor().getApellidoMaterno());
+        }
+        if (o.getResponsable() != null) {
+            dto.setIdResponsable(o.getResponsable().getId());
+            dto.setNombreCompletoResponsable(o.getResponsable().getNombres() + " " + o.getResponsable().getApellidoPaterno() + " " + o.getResponsable().getApellidoMaterno());
+        }
+        if (o.getRespTecnico() != null) {
+            dto.setIdRespTecnico(o.getRespTecnico().getId());
+            dto.setNombreCompletoRespTecnico(o.getRespTecnico().getNombres() + " " + o.getRespTecnico().getApellidoPaterno() + " " + o.getRespTecnico().getApellidoMaterno());
+        }
+        if (o.getRespRecepciona() != null) {
+            dto.setIdRespRecepciona(o.getRespRecepciona().getId());
+            dto.setNombreCompletoRespRecepciona(o.getRespRecepciona().getNombres() + " " + o.getRespRecepciona().getApellidoPaterno() + " " + o.getRespRecepciona().getApellidoMaterno());
+        }
+        dto.setFechaHoraIngreso(o.getFechaHoraIngreso());
+        dto.setFechaHoraSalida(o.getFechaHoraSalida());
+        dto.setTrabajoARealizar(o.getTrabajoARealizar());
+        dto.setObsRecepcion(o.getObsRecepcion());
+        dto.setHoraResponsable(o.getHoraResponsable());
+        dto.setHoraTecnico(o.getHoraTecnico());
+        dto.setHoraRecepcion(o.getHoraRecepcion());
+        dto.setObsTecnicas(o.getObsTecnicas());
+        dto.setAutoriza(o.getAutoriza());
+        dto.setRetira(o.getRetira());
+        dto.setBodega(o.getBodega());
+        dto.setFormato(o.getFormato());
+        return dto;
     }
 }

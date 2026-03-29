@@ -10,8 +10,7 @@ public class CreateOTTecnicoDto {
 
     private Integer idOrdenTrabajoProg;
 
-    @Size(max = 50, message = "El nombre no puede exceder 50 caracteres")
-    private String nombre;
+    private Integer idEmpleado;
 
     @Size(max = 15, message = "El tipo no puede exceder 15 caracteres")
     private String tipo;
@@ -44,12 +43,12 @@ public class CreateOTTecnicoDto {
         this.idOrdenTrabajoProg = idOrdenTrabajoProg;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Integer getIdEmpleado() {
+        return idEmpleado;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setIdEmpleado(Integer idEmpleado) {
+        this.idEmpleado = idEmpleado;
     }
 
     public String getTipo() {

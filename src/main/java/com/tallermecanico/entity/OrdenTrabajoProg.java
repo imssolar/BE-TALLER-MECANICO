@@ -1,7 +1,7 @@
 package com.tallermecanico.entity;
 
 import jakarta.persistence.*;
-
+import com.tallermecanico.entity.Empleado;
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,8 +29,9 @@ public class OrdenTrabajoProg {
     @Column(length = 8)
     private String ppu;
 
-    @Column(length = 30)
-    private String conductor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_conductor")
+    private Empleado conductor;
 
     @Column(name = "fecha_hora_ingreso")
     private LocalDateTime fechaHoraIngreso;
@@ -41,20 +42,23 @@ public class OrdenTrabajoProg {
     @Column(name = "trabajo_a_realizar", length = 120)
     private String trabajoARealizar;
 
-    @Column(name = "jefe_turno_patio", length = 50)
-    private String jefeTurnoPatio;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_jefe_turno_patio")
+    private Empleado jefeTurnoPatio;
 
     @Column(name = "hora_jefe_turno_patio")
     private LocalDateTime horaJefeTurnoPatio;
 
-    @Column(name = "jefe_turno_mant", length = 50)
-    private String jefeTurnoMant;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_jefe_turno_mant")
+    private Empleado jefeTurnoMant;
 
     @Column(name = "hora_jefe_turno_mant")
     private LocalDateTime horaJefeTurnoMant;
 
-    @Column(name = "superv_calidad", length = 50)
-    private String supervCalidad;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_superv_calidad")
+    private Empleado supervCalidad;
 
     @Column(name = "hora_superv_calidad")
     private LocalDateTime horaSupervCalidad;
@@ -130,11 +134,11 @@ public class OrdenTrabajoProg {
         this.ppu = ppu;
     }
 
-    public String getConductor() {
+    public Empleado getConductor() {
         return conductor;
     }
 
-    public void setConductor(String conductor) {
+    public void setConductor(Empleado conductor) {
         this.conductor = conductor;
     }
 
@@ -162,11 +166,11 @@ public class OrdenTrabajoProg {
         this.trabajoARealizar = trabajoARealizar;
     }
 
-    public String getJefeTurnoPatio() {
+    public Empleado getJefeTurnoPatio() {
         return jefeTurnoPatio;
     }
 
-    public void setJefeTurnoPatio(String jefeTurnoPatio) {
+    public void setJefeTurnoPatio(Empleado jefeTurnoPatio) {
         this.jefeTurnoPatio = jefeTurnoPatio;
     }
 
@@ -178,11 +182,11 @@ public class OrdenTrabajoProg {
         this.horaJefeTurnoPatio = horaJefeTurnoPatio;
     }
 
-    public String getJefeTurnoMant() {
+    public Empleado getJefeTurnoMant() {
         return jefeTurnoMant;
     }
 
-    public void setJefeTurnoMant(String jefeTurnoMant) {
+    public void setJefeTurnoMant(Empleado jefeTurnoMant) {
         this.jefeTurnoMant = jefeTurnoMant;
     }
 
@@ -194,11 +198,11 @@ public class OrdenTrabajoProg {
         this.horaJefeTurnoMant = horaJefeTurnoMant;
     }
 
-    public String getSupervCalidad() {
+    public Empleado getSupervCalidad() {
         return supervCalidad;
     }
 
-    public void setSupervCalidad(String supervCalidad) {
+    public void setSupervCalidad(Empleado supervCalidad) {
         this.supervCalidad = supervCalidad;
     }
 

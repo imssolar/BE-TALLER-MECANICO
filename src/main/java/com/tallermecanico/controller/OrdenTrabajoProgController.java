@@ -3,7 +3,7 @@ package com.tallermecanico.controller;
 import com.tallermecanico.dto.request.CreateOrdenTrabajoProgDto;
 import com.tallermecanico.dto.request.UpdateOrdenTrabajoProgDto;
 import com.tallermecanico.dto.response.DeleteOrdenTrabajoProgResponseDto;
-import com.tallermecanico.entity.OrdenTrabajoProg;
+import com.tallermecanico.dto.response.OrdenTrabajoProgResponseDto;
 import com.tallermecanico.service.OrdenTrabajoProgService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,45 +23,38 @@ public class OrdenTrabajoProgController {
     }
 
     @PostMapping
-    public ResponseEntity<OrdenTrabajoProg> create(@Valid @RequestBody CreateOrdenTrabajoProgDto dto) {
-        OrdenTrabajoProg otp = ordenTrabajoProgService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(otp);
+    public ResponseEntity<OrdenTrabajoProgResponseDto> create(@Valid @RequestBody CreateOrdenTrabajoProgDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ordenTrabajoProgService.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<OrdenTrabajoProg>> findAll() {
-        List<OrdenTrabajoProg> ordenes = ordenTrabajoProgService.findAll();
-        return ResponseEntity.ok(ordenes);
+    public ResponseEntity<List<OrdenTrabajoProgResponseDto>> findAll() {
+        return ResponseEntity.ok(ordenTrabajoProgService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrdenTrabajoProg> findById(@PathVariable Integer id) {
-        OrdenTrabajoProg otp = ordenTrabajoProgService.findById(id);
-        return ResponseEntity.ok(otp);
+    public ResponseEntity<OrdenTrabajoProgResponseDto> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(ordenTrabajoProgService.findById(id));
     }
 
     @GetMapping("/bus/{idBus}")
-    public ResponseEntity<List<OrdenTrabajoProg>> findByBus(@PathVariable Integer idBus) {
-        List<OrdenTrabajoProg> ordenes = ordenTrabajoProgService.findByBus(idBus);
-        return ResponseEntity.ok(ordenes);
+    public ResponseEntity<List<OrdenTrabajoProgResponseDto>> findByBus(@PathVariable Integer idBus) {
+        return ResponseEntity.ok(ordenTrabajoProgService.findByBus(idBus));
     }
 
     @GetMapping("/terminal/{idTerminal}")
-    public ResponseEntity<List<OrdenTrabajoProg>> findByTerminal(@PathVariable Integer idTerminal) {
-        List<OrdenTrabajoProg> ordenes = ordenTrabajoProgService.findByTerminal(idTerminal);
-        return ResponseEntity.ok(ordenes);
+    public ResponseEntity<List<OrdenTrabajoProgResponseDto>> findByTerminal(@PathVariable Integer idTerminal) {
+        return ResponseEntity.ok(ordenTrabajoProgService.findByTerminal(idTerminal));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<OrdenTrabajoProg> update(@PathVariable Integer id,
-                                                    @Valid @RequestBody UpdateOrdenTrabajoProgDto dto) {
-        OrdenTrabajoProg otp = ordenTrabajoProgService.update(id, dto);
-        return ResponseEntity.ok(otp);
+    public ResponseEntity<OrdenTrabajoProgResponseDto> update(@PathVariable Integer id,
+                                                              @Valid @RequestBody UpdateOrdenTrabajoProgDto dto) {
+        return ResponseEntity.ok(ordenTrabajoProgService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteOrdenTrabajoProgResponseDto> delete(@PathVariable Integer id) {
-        DeleteOrdenTrabajoProgResponseDto response = ordenTrabajoProgService.delete(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ordenTrabajoProgService.delete(id));
     }
 }

@@ -29,7 +29,7 @@ public class DetalleTrabOTService {
         DetalleTrabOT detalle = new DetalleTrabOT();
 
         if (dto.getIdOrdenTrabajo() != null) {
-            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findById(dto.getIdOrdenTrabajo());
+            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findEntityById(dto.getIdOrdenTrabajo());
             detalle.setOrdenTrabajo(ordenTrabajo);
         }
 
@@ -61,7 +61,7 @@ public class DetalleTrabOTService {
                 .orElseThrow(() -> new ResourceNotFoundException("DetalleTrabOT", "id", id));
 
         if (dto.getIdOrdenTrabajo() != null) {
-            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findById(dto.getIdOrdenTrabajo());
+            OrdenTrabajo ordenTrabajo = ordenTrabajoService.findEntityById(dto.getIdOrdenTrabajo());
             detalle.setOrdenTrabajo(ordenTrabajo);
         }
         if (dto.getTrabajo() != null) {

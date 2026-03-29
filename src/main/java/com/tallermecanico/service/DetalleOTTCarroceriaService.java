@@ -29,7 +29,7 @@ public class DetalleOTTCarroceriaService {
         DetalleOTTCarroceria detalle = new DetalleOTTCarroceria();
 
         if (dto.getIdOtCarroceria() != null) {
-            OTCarroceria otCarroceria = otCarroceriaService.findById(dto.getIdOtCarroceria());
+            OTCarroceria otCarroceria = otCarroceriaService.findEntityById(dto.getIdOtCarroceria());
             detalle.setOtCarroceria(otCarroceria);
         }
 
@@ -65,7 +65,7 @@ public class DetalleOTTCarroceriaService {
                 .orElseThrow(() -> new ResourceNotFoundException("DetalleOTTCarroceria", "id", id));
 
         if (dto.getIdOtCarroceria() != null) {
-            OTCarroceria otCarroceria = otCarroceriaService.findById(dto.getIdOtCarroceria());
+            OTCarroceria otCarroceria = otCarroceriaService.findEntityById(dto.getIdOtCarroceria());
             detalle.setOtCarroceria(otCarroceria);
         }
         if (dto.getCodigo() != null) {

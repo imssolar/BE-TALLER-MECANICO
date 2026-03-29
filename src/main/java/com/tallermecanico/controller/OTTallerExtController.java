@@ -3,7 +3,7 @@ package com.tallermecanico.controller;
 import com.tallermecanico.dto.request.CreateOTTallerExtDto;
 import com.tallermecanico.dto.request.UpdateOTTallerExtDto;
 import com.tallermecanico.dto.response.DeleteOTTallerExtResponseDto;
-import com.tallermecanico.entity.OTTallerExt;
+import com.tallermecanico.dto.response.OTTallerExtResponseDto;
 import com.tallermecanico.service.OTTallerExtService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,39 +23,33 @@ public class OTTallerExtController {
     }
 
     @PostMapping
-    public ResponseEntity<OTTallerExt> create(@Valid @RequestBody CreateOTTallerExtDto dto) {
-        OTTallerExt otTallerExt = otTallerExtService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(otTallerExt);
+    public ResponseEntity<OTTallerExtResponseDto> create(@Valid @RequestBody CreateOTTallerExtDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(otTallerExtService.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<OTTallerExt>> findAll() {
-        List<OTTallerExt> otTallerExts = otTallerExtService.findAll();
-        return ResponseEntity.ok(otTallerExts);
+    public ResponseEntity<List<OTTallerExtResponseDto>> findAll() {
+        return ResponseEntity.ok(otTallerExtService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OTTallerExt> findById(@PathVariable Integer id) {
-        OTTallerExt otTallerExt = otTallerExtService.findById(id);
-        return ResponseEntity.ok(otTallerExt);
+    public ResponseEntity<OTTallerExtResponseDto> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(otTallerExtService.findById(id));
     }
 
     @GetMapping("/bus/{idBus}")
-    public ResponseEntity<List<OTTallerExt>> findByBus(@PathVariable Integer idBus) {
-        List<OTTallerExt> otTallerExts = otTallerExtService.findByBus(idBus);
-        return ResponseEntity.ok(otTallerExts);
+    public ResponseEntity<List<OTTallerExtResponseDto>> findByBus(@PathVariable Integer idBus) {
+        return ResponseEntity.ok(otTallerExtService.findByBus(idBus));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<OTTallerExt> update(@PathVariable Integer id,
-                                               @Valid @RequestBody UpdateOTTallerExtDto dto) {
-        OTTallerExt otTallerExt = otTallerExtService.update(id, dto);
-        return ResponseEntity.ok(otTallerExt);
+    public ResponseEntity<OTTallerExtResponseDto> update(@PathVariable Integer id,
+                                                         @Valid @RequestBody UpdateOTTallerExtDto dto) {
+        return ResponseEntity.ok(otTallerExtService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteOTTallerExtResponseDto> delete(@PathVariable Integer id) {
-        DeleteOTTallerExtResponseDto response = otTallerExtService.delete(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(otTallerExtService.delete(id));
     }
 }
