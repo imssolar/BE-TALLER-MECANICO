@@ -3,6 +3,7 @@ package com.tallermecanico.service;
 import com.tallermecanico.dto.request.CreateOTCarroceriaDto;
 import com.tallermecanico.dto.request.UpdateOTCarroceriaDto;
 import com.tallermecanico.dto.response.DeleteOTCarroceriaResponseDto;
+import com.tallermecanico.dto.response.OTCarroceriaResponseDto;
 import com.tallermecanico.entity.Bus;
 import com.tallermecanico.entity.GravedadCarroceria;
 import com.tallermecanico.entity.GravedadFibra;
@@ -42,7 +43,7 @@ public class OTCarroceriaService {
     }
 
     @Transactional
-    public OTCarroceria create(CreateOTCarroceriaDto dto) {
+    public OTCarroceriaResponseDto create(CreateOTCarroceriaDto dto) {
         if (otCarroceriaRepository.existsById(dto.getId())) {
             throw new DuplicateResourceException("OTCarroceria", "id", dto.getId());
         }
@@ -83,33 +84,45 @@ public class OTCarroceriaService {
             otCarroceria.setGravedadFibra(gravedadFibra);
         }
 
-        return otCarroceriaRepository.save(otCarroceria);
+        return toDto(otCarroceriaRepository.save(otCarroceria));
     }
 
     @Transactional(readOnly = true)
-    public List<OTCarroceria> findAll() {
-        return otCarroceriaRepository.findAll();
+    public List<OTCarroceriaResponseDto> findAll() {
+        return otCarroceriaRepository.findAllWithRelations().stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public OTCarroceria findById(Integer id) {
+    public OTCarroceriaResponseDto findById(Integer id) {
+        return toDto(otCarroceriaRepository.findByIdWithRelations(id)
+                .orElseThrow(() -> new ResourceNotFoundException("OTCarroceria", "id", id)));
+    }
+
+    @Transactional(readOnly = true)
+    public OTCarroceria findEntityById(Integer id) {
         return otCarroceriaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OTCarroceria", "id", id));
     }
 
     @Transactional(readOnly = true)
-    public List<OTCarroceria> findByBus(Integer idBus) {
-        return otCarroceriaRepository.findByBus_IdBus(idBus);
+    public List<OTCarroceriaResponseDto> findByBus(Integer idBus) {
+        return otCarroceriaRepository.findByBusWithRelations(idBus).stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<OTCarroceria> findByTerminal(Integer idTerminal) {
-        return otCarroceriaRepository.findByTerminal_IdTerminal(idTerminal);
+    public List<OTCarroceriaResponseDto> findByTerminal(Integer idTerminal) {
+        return otCarroceriaRepository.findByTerminalWithRelations(idTerminal).stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional
-    public OTCarroceria update(Integer id, UpdateOTCarroceriaDto dto) {
-        OTCarroceria otCarroceria = otCarroceriaRepository.findById(id)
+    public OTCarroceriaResponseDto update(Integer id, UpdateOTCarroceriaDto dto) {
+        OTCarroceria otCarroceria = otCarroceriaRepository.findByIdWithRelations(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OTCarroceria", "id", id));
 
         if (dto.getTipoOttc() != null) {
@@ -158,7 +171,7 @@ public class OTCarroceriaService {
             otCarroceria.setGravedadFibra(gravedadFibra);
         }
 
-        return otCarroceriaRepository.save(otCarroceria);
+        return toDto(otCarroceriaRepository.save(otCarroceria));
     }
 
     @Transactional
@@ -171,5 +184,41 @@ public class OTCarroceriaService {
                 otCarroceria.getId(),
                 "OT de carroceria eliminada exitosamente"
         );
+    }
+
+    private OTCarroceriaResponseDto toDto(OTCarroceria o) {
+        OTCarroceriaResponseDto dto = new OTCarroceriaResponseDto();
+        dto.setId(o.getId());
+        dto.setTipoOttc(o.getTipoOttc());
+        dto.setKm(o.getKm());
+        dto.setPpu(o.getPpu());
+        dto.setFechaHoraIngreso(o.getFechaHoraIngreso());
+        dto.setFechaHoraSalida(o.getFechaHoraSalida());
+        dto.setDetalleCarroceria(o.getDetalleCarroceria());
+        dto.setDetallePintura(o.getDetallePintura());
+        dto.setDetalleFibra(o.getDetalleFibra());
+
+        if (o.getTerminal() != null) {
+            dto.setIdTerminal(o.getTerminal().getIdTerminal());
+            dto.setTerminal(o.getTerminal().getTerminal());
+        }
+        if (o.getBus() != null) {
+            dto.setIdBus(o.getBus().getIdBus());
+            dto.setPatenteB(o.getBus().getPatenteB());
+        }
+        if (o.getGravedadCarroceria() != null) {
+            dto.setIdGravedadCarroceria(o.getGravedadCarroceria().getId());
+            dto.setGravedadCarroceria(o.getGravedadCarroceria().getGravedad());
+        }
+        if (o.getGravedadPintura() != null) {
+            dto.setIdGravedadPintura(o.getGravedadPintura().getId());
+            dto.setGravedadPintura(o.getGravedadPintura().getGravedad());
+        }
+        if (o.getGravedadFibra() != null) {
+            dto.setIdGravedadFibra(o.getGravedadFibra().getId());
+            dto.setGravedadFibra(o.getGravedadFibra().getGravedad());
+        }
+
+        return dto;
     }
 }

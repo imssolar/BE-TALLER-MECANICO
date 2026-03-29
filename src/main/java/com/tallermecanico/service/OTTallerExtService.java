@@ -3,7 +3,9 @@ package com.tallermecanico.service;
 import com.tallermecanico.dto.request.CreateOTTallerExtDto;
 import com.tallermecanico.dto.request.UpdateOTTallerExtDto;
 import com.tallermecanico.dto.response.DeleteOTTallerExtResponseDto;
+import com.tallermecanico.dto.response.OTTallerExtResponseDto;
 import com.tallermecanico.entity.Bus;
+import com.tallermecanico.entity.Empleado;
 import com.tallermecanico.entity.OTTallerExt;
 import com.tallermecanico.exception.DuplicateResourceException;
 import com.tallermecanico.exception.ResourceNotFoundException;
@@ -18,15 +20,18 @@ public class OTTallerExtService {
 
     private final OTTallerExtRepository otTallerExtRepository;
     private final BusService busService;
+    private final EmpleadoService empleadoService;
 
     public OTTallerExtService(OTTallerExtRepository otTallerExtRepository,
-                              BusService busService) {
+                              BusService busService,
+                              EmpleadoService empleadoService) {
         this.otTallerExtRepository = otTallerExtRepository;
         this.busService = busService;
+        this.empleadoService = empleadoService;
     }
 
     @Transactional
-    public OTTallerExt create(CreateOTTallerExtDto dto) {
+    public OTTallerExtResponseDto create(CreateOTTallerExtDto dto) {
         if (otTallerExtRepository.existsById(dto.getId())) {
             throw new DuplicateResourceException("OTTallerExt", "id", dto.getId());
         }
@@ -38,11 +43,14 @@ public class OTTallerExtService {
             Bus bus = busService.findById(dto.getIdBus());
             otTallerExt.setBus(bus);
         }
+        if (dto.getIdConductor() != null) {
+            Empleado conductor = empleadoService.findEntityById(dto.getIdConductor());
+            otTallerExt.setConductor(conductor);
+        }
 
         otTallerExt.setKm(dto.getKm());
         otTallerExt.setPpu(dto.getPpu());
         otTallerExt.setProveedor(dto.getProveedor());
-        otTallerExt.setConductor(dto.getConductor());
         otTallerExt.setRecorrido(dto.getRecorrido());
         otTallerExt.setFecha(dto.getFecha());
         otTallerExt.setRecibeTaller(dto.getRecibeTaller());
@@ -60,33 +68,47 @@ public class OTTallerExtService {
         otTallerExt.setSistema(dto.getSistema());
         otTallerExt.setFechaSalida(dto.getFechaSalida());
 
-        return otTallerExtRepository.save(otTallerExt);
+        return toDto(otTallerExtRepository.save(otTallerExt));
     }
 
     @Transactional(readOnly = true)
-    public List<OTTallerExt> findAll() {
-        return otTallerExtRepository.findAll();
+    public List<OTTallerExtResponseDto> findAll() {
+        return otTallerExtRepository.findAllWithRelations().stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public OTTallerExt findById(Integer id) {
+    public OTTallerExtResponseDto findById(Integer id) {
+        return toDto(otTallerExtRepository.findByIdWithRelations(id)
+                .orElseThrow(() -> new ResourceNotFoundException("OTTallerExt", "id", id)));
+    }
+
+    @Transactional(readOnly = true)
+    public OTTallerExt findEntityById(Integer id) {
         return otTallerExtRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OTTallerExt", "id", id));
     }
 
     @Transactional(readOnly = true)
-    public List<OTTallerExt> findByBus(Integer idBus) {
-        return otTallerExtRepository.findByBus_IdBus(idBus);
+    public List<OTTallerExtResponseDto> findByBus(Integer idBus) {
+        return otTallerExtRepository.findByBusWithRelations(idBus).stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Transactional
-    public OTTallerExt update(Integer id, UpdateOTTallerExtDto dto) {
-        OTTallerExt otTallerExt = otTallerExtRepository.findById(id)
+    public OTTallerExtResponseDto update(Integer id, UpdateOTTallerExtDto dto) {
+        OTTallerExt otTallerExt = otTallerExtRepository.findByIdWithRelations(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OTTallerExt", "id", id));
 
         if (dto.getIdBus() != null) {
             Bus bus = busService.findById(dto.getIdBus());
             otTallerExt.setBus(bus);
+        }
+        if (dto.getIdConductor() != null) {
+            Empleado conductor = empleadoService.findEntityById(dto.getIdConductor());
+            otTallerExt.setConductor(conductor);
         }
         if (dto.getKm() != null) {
             otTallerExt.setKm(dto.getKm());
@@ -96,9 +118,6 @@ public class OTTallerExtService {
         }
         if (dto.getProveedor() != null) {
             otTallerExt.setProveedor(dto.getProveedor());
-        }
-        if (dto.getConductor() != null) {
-            otTallerExt.setConductor(dto.getConductor());
         }
         if (dto.getRecorrido() != null) {
             otTallerExt.setRecorrido(dto.getRecorrido());
@@ -149,7 +168,7 @@ public class OTTallerExtService {
             otTallerExt.setFechaSalida(dto.getFechaSalida());
         }
 
-        return otTallerExtRepository.save(otTallerExt);
+        return toDto(otTallerExtRepository.save(otTallerExt));
     }
 
     @Transactional
@@ -162,5 +181,40 @@ public class OTTallerExtService {
                 otTallerExt.getId(),
                 "OT de taller externo eliminada exitosamente"
         );
+    }
+
+    private OTTallerExtResponseDto toDto(OTTallerExt o) {
+        OTTallerExtResponseDto dto = new OTTallerExtResponseDto();
+        dto.setId(o.getId());
+        dto.setKm(o.getKm());
+        dto.setPpu(o.getPpu());
+        dto.setProveedor(o.getProveedor());
+        dto.setRecorrido(o.getRecorrido());
+        dto.setFecha(o.getFecha());
+        dto.setRecibeTaller(o.getRecibeTaller());
+        dto.setHoraLlegada(o.getHoraLlegada());
+        dto.setHoraSalida(o.getHoraSalida());
+        dto.setDiagnostico(o.getDiagnostico());
+        dto.setNombrePreparador(o.getNombrePreparador());
+        dto.setHoraPreparador(o.getHoraPreparador());
+        dto.setNombreRevisor(o.getNombreRevisor());
+        dto.setHoraRevisor(o.getHoraRevisor());
+        dto.setNombreEjecutor(o.getNombreEjecutor());
+        dto.setHoraEjecutor(o.getHoraEjecutor());
+        dto.setTotal(o.getTotal());
+        dto.setIncidencias(o.getIncidencias());
+        dto.setSistema(o.getSistema());
+        dto.setFechaSalida(o.getFechaSalida());
+
+        if (o.getBus() != null) {
+            dto.setIdBus(o.getBus().getIdBus());
+            dto.setPatenteB(o.getBus().getPatenteB());
+        }
+        if (o.getConductor() != null) {
+            dto.setIdConductor(o.getConductor().getId());
+            dto.setNombreConductor(o.getConductor().getNombreCompleto());
+        }
+
+        return dto;
     }
 }

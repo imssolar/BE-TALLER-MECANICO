@@ -211,9 +211,8 @@ public class OrdenTrabajoService {
             dto.setIdBus(o.getBus().getIdBus());
             dto.setPatenteB(o.getBus().getPatenteB());
         }
-        if (o.getTerminal() != null) {
-            dto.setIdTerminal(o.getTerminal().getIdTerminal());
-        }
+        dto.setIdTerminal(o.getTerminal().getIdTerminal());
+        dto.setNombreTerminal(o.getTerminal().getTerminal());
         if (o.getConductor() != null) {
             dto.setIdConductor(o.getConductor().getId());
             dto.setNombreCompletoConductor(o.getConductor().getNombres() + " " + o.getConductor().getApellidoPaterno() + " " + o.getConductor().getApellidoMaterno());
