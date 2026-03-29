@@ -20,8 +20,7 @@ public class CreateOTTallerExtDto {
     @Size(max = 50, message = "El proveedor no puede exceder 50 caracteres")
     private String proveedor;
 
-    @Size(max = 30, message = "El conductor no puede exceder 30 caracteres")
-    private String conductor;
+    private Integer idConductor;
 
     @Size(max = 50, message = "El recorrido no puede exceder 50 caracteres")
     private String recorrido;
@@ -108,12 +107,12 @@ public class CreateOTTallerExtDto {
         this.proveedor = proveedor;
     }
 
-    public String getConductor() {
-        return conductor;
+    public Integer getIdConductor() {
+        return idConductor;
     }
 
-    public void setConductor(String conductor) {
-        this.conductor = conductor;
+    public void setIdConductor(Integer idConductor) {
+        this.idConductor = idConductor;
     }
 
     public String getRecorrido() {
