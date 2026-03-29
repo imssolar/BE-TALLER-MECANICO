@@ -3,7 +3,7 @@ package com.tallermecanico.controller;
 import com.tallermecanico.dto.request.CreateOTTecnicoDto;
 import com.tallermecanico.dto.request.UpdateOTTecnicoDto;
 import com.tallermecanico.dto.response.DeleteOTTecnicoResponseDto;
-import com.tallermecanico.entity.OTTecnico;
+import com.tallermecanico.dto.response.OTTecnicoResponseDto;
 import com.tallermecanico.service.OTTecnicoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,45 +23,38 @@ public class OTTecnicoController {
     }
 
     @PostMapping
-    public ResponseEntity<OTTecnico> create(@Valid @RequestBody CreateOTTecnicoDto dto) {
-        OTTecnico tecnico = otTecnicoService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tecnico);
+    public ResponseEntity<OTTecnicoResponseDto> create(@Valid @RequestBody CreateOTTecnicoDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(otTecnicoService.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<OTTecnico>> findAll() {
-        List<OTTecnico> tecnicos = otTecnicoService.findAll();
-        return ResponseEntity.ok(tecnicos);
+    public ResponseEntity<List<OTTecnicoResponseDto>> findAll() {
+        return ResponseEntity.ok(otTecnicoService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OTTecnico> findById(@PathVariable Integer id) {
-        OTTecnico tecnico = otTecnicoService.findById(id);
-        return ResponseEntity.ok(tecnico);
+    public ResponseEntity<OTTecnicoResponseDto> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(otTecnicoService.findById(id));
     }
 
     @GetMapping("/orden-trabajo/{idOrdenTrabajo}")
-    public ResponseEntity<List<OTTecnico>> findByOrdenTrabajo(@PathVariable Integer idOrdenTrabajo) {
-        List<OTTecnico> tecnicos = otTecnicoService.findByOrdenTrabajo(idOrdenTrabajo);
-        return ResponseEntity.ok(tecnicos);
+    public ResponseEntity<List<OTTecnicoResponseDto>> findByOrdenTrabajo(@PathVariable Integer idOrdenTrabajo) {
+        return ResponseEntity.ok(otTecnicoService.findByOrdenTrabajo(idOrdenTrabajo));
     }
 
     @GetMapping("/orden-trabajo-prog/{idOrdenTrabajoProg}")
-    public ResponseEntity<List<OTTecnico>> findByOrdenTrabajoProg(@PathVariable Integer idOrdenTrabajoProg) {
-        List<OTTecnico> tecnicos = otTecnicoService.findByOrdenTrabajoProg(idOrdenTrabajoProg);
-        return ResponseEntity.ok(tecnicos);
+    public ResponseEntity<List<OTTecnicoResponseDto>> findByOrdenTrabajoProg(@PathVariable Integer idOrdenTrabajoProg) {
+        return ResponseEntity.ok(otTecnicoService.findByOrdenTrabajoProg(idOrdenTrabajoProg));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<OTTecnico> update(@PathVariable Integer id,
-                                             @Valid @RequestBody UpdateOTTecnicoDto dto) {
-        OTTecnico tecnico = otTecnicoService.update(id, dto);
-        return ResponseEntity.ok(tecnico);
+    public ResponseEntity<OTTecnicoResponseDto> update(@PathVariable Integer id,
+                                                       @Valid @RequestBody UpdateOTTecnicoDto dto) {
+        return ResponseEntity.ok(otTecnicoService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteOTTecnicoResponseDto> delete(@PathVariable Integer id) {
-        DeleteOTTecnicoResponseDto response = otTecnicoService.delete(id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(otTecnicoService.delete(id));
     }
 }
