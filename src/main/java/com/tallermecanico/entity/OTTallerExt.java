@@ -1,5 +1,6 @@
 package com.tallermecanico.entity;
 
+import com.tallermecanico.entity.Empleado;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,8 +26,9 @@ public class OTTallerExt {
     @Column(length = 50)
     private String proveedor;
 
-    @Column(length = 30)
-    private String conductor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_conductor")
+    private Empleado conductor;
 
     @Column(length = 50)
     private String recorrido;
@@ -121,11 +123,11 @@ public class OTTallerExt {
         this.proveedor = proveedor;
     }
 
-    public String getConductor() {
+    public Empleado getConductor() {
         return conductor;
     }
 
-    public void setConductor(String conductor) {
+    public void setConductor(Empleado conductor) {
         this.conductor = conductor;
     }
 

@@ -1,5 +1,6 @@
 package com.tallermecanico.entity;
 
+import com.tallermecanico.entity.Empleado;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -20,8 +21,9 @@ public class OTTecnico {
     @JoinColumn(name = "id_orden_trabajo_prog")
     private OrdenTrabajoProg ordenTrabajoProg;
 
-    @Column(length = 50)
-    private String nombre;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado")
+    private Empleado empleado;
 
     @Column(length = 15)
     private String tipo;
@@ -64,12 +66,12 @@ public class OTTecnico {
         this.ordenTrabajoProg = ordenTrabajoProg;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Empleado getEmpleado() {
+        return empleado;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
     }
 
     public String getTipo() {
