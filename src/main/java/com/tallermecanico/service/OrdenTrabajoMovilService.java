@@ -5,6 +5,7 @@ import com.tallermecanico.dto.request.UpdateOrdenTrabajoMovilDto;
 import com.tallermecanico.dto.response.DeleteOrdenTrabajoMovilResponseDto;
 import com.tallermecanico.dto.response.OrdenTrabajoMovilResponseDto;
 import com.tallermecanico.entity.Empleado;
+import com.tallermecanico.entity.Movil;
 import com.tallermecanico.entity.OrdenTrabajoMovil;
 import com.tallermecanico.entity.Terminal;
 import com.tallermecanico.exception.DuplicateResourceException;
@@ -20,13 +21,16 @@ public class OrdenTrabajoMovilService {
 
     private final OrdenTrabajoMovilRepository ordenTrabajoMovilRepository;
     private final TerminalService terminalService;
+    private final MovilService movilService;
     private final EmpleadoService empleadoService;
 
     public OrdenTrabajoMovilService(OrdenTrabajoMovilRepository ordenTrabajoMovilRepository,
                                     TerminalService terminalService,
+                                    MovilService movilService,
                                     EmpleadoService empleadoService) {
         this.ordenTrabajoMovilRepository = ordenTrabajoMovilRepository;
         this.terminalService = terminalService;
+        this.movilService = movilService;
         this.empleadoService = empleadoService;
     }
 
@@ -40,7 +44,6 @@ public class OrdenTrabajoMovilService {
         otm.setId(dto.getId());
         otm.setTipoOtm(dto.getTipoOtm());
         otm.setNroOtManager(dto.getNroOtManager());
-        otm.setNroMovil(dto.getNroMovil());
         otm.setKm(dto.getKm());
         otm.setPpu(dto.getPpu());
         otm.setFechaHoraIngreso(dto.getFechaHoraIngreso());
@@ -59,6 +62,10 @@ public class OrdenTrabajoMovilService {
         if (dto.getIdTerminal() != null) {
             Terminal terminal = terminalService.findById(dto.getIdTerminal());
             otm.setTerminal(terminal);
+        }
+        if (dto.getIdMovil() != null) {
+            Movil movil = movilService.findById(dto.getIdMovil());
+            otm.setMovil(movil);
         }
         if (dto.getIdConductor() != null) {
             Empleado conductor = empleadoService.findEntityById(dto.getIdConductor());
@@ -118,8 +125,8 @@ public class OrdenTrabajoMovilService {
         if (dto.getNroOtManager() != null) {
             otm.setNroOtManager(dto.getNroOtManager());
         }
-        if (dto.getNroMovil() != null) {
-            otm.setNroMovil(dto.getNroMovil());
+        if (dto.getIdMovil() != null) {
+            otm.setMovil(movilService.findById(dto.getIdMovil()));
         }
         if (dto.getKm() != null) {
             otm.setKm(dto.getKm());
@@ -192,11 +199,14 @@ public class OrdenTrabajoMovilService {
         dto.setId(o.getId());
         dto.setTipoOtm(o.getTipoOtm());
         dto.setNroOtManager(o.getNroOtManager());
-        dto.setNroMovil(o.getNroMovil());
         dto.setKm(o.getKm());
         dto.setPpu(o.getPpu());
         if (o.getTerminal() != null) {
             dto.setIdTerminal(o.getTerminal().getIdTerminal());
+        }
+        if (o.getMovil() != null) {
+            dto.setIdMovil(o.getMovil().getId());
+            dto.setPatenteMovil(o.getMovil().getPatente());
         }
         if (o.getConductor() != null) {
             dto.setIdConductor(o.getConductor().getId());
