@@ -17,7 +17,7 @@ public class CreateOrdenTrabajoMovilDto {
 
     private Long nroOtManager;
 
-    private Integer nroMovil;
+    private Integer idMovil;
 
     private Integer km;
 
@@ -100,12 +100,12 @@ public class CreateOrdenTrabajoMovilDto {
         this.nroOtManager = nroOtManager;
     }
 
-    public Integer getNroMovil() {
-        return nroMovil;
+    public Integer getIdMovil() {
+        return idMovil;
     }
 
-    public void setNroMovil(Integer nroMovil) {
-        this.nroMovil = nroMovil;
+    public void setIdMovil(Integer idMovil) {
+        this.idMovil = idMovil;
     }
 
     public Integer getKm() {

@@ -8,7 +8,8 @@ public class OrdenTrabajoMovilResponseDto {
     private String tipoOtm;
     private Integer idTerminal;
     private Long nroOtManager;
-    private Integer nroMovil;
+    private Integer idMovil;
+    private String patenteMovil;
     private Integer km;
     private String ppu;
     private Integer idConductor;
@@ -46,8 +47,11 @@ public class OrdenTrabajoMovilResponseDto {
     public Long getNroOtManager() { return nroOtManager; }
     public void setNroOtManager(Long nroOtManager) { this.nroOtManager = nroOtManager; }
 
-    public Integer getNroMovil() { return nroMovil; }
-    public void setNroMovil(Integer nroMovil) { this.nroMovil = nroMovil; }
+    public Integer getIdMovil() { return idMovil; }
+    public void setIdMovil(Integer idMovil) { this.idMovil = idMovil; }
+
+    public String getPatenteMovil() { return patenteMovil; }
+    public void setPatenteMovil(String patenteMovil) { this.patenteMovil = patenteMovil; }
 
     public Integer getKm() { return km; }
     public void setKm(Integer km) { this.km = km; }

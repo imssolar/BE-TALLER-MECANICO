@@ -2,6 +2,7 @@ package com.tallermecanico.entity;
 
 import jakarta.persistence.*;
 import com.tallermecanico.entity.Empleado;
+import com.tallermecanico.entity.Movil;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,8 +23,9 @@ public class OrdenTrabajoMovil {
     @Column(name = "nro_ot_manager")
     private Long nroOtManager;
 
-    @Column(name = "nro_movil")
-    private Integer nroMovil;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_movil")
+    private Movil movil;
 
     @Column
     private Integer km;
@@ -120,12 +122,12 @@ public class OrdenTrabajoMovil {
         this.nroOtManager = nroOtManager;
     }
 
-    public Integer getNroMovil() {
-        return nroMovil;
+    public Movil getMovil() {
+        return movil;
     }
 
-    public void setNroMovil(Integer nroMovil) {
-        this.nroMovil = nroMovil;
+    public void setMovil(Movil movil) {
+        this.movil = movil;
     }
 
     public Integer getKm() {
